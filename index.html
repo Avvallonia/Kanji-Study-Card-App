@@ -45,23 +45,75 @@ header {
 }
 header h1 { font-size: 17px; margin: 0; font-weight: 600; letter-spacing: 0.3px; }
 header .badge { font-size: 12px; color: var(--muted); }
-#levelBar {
-  position: sticky; top: calc(env(safe-area-inset-top) + 45px); z-index: 9;
-  background: rgba(15,17,21,0.95);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-  display: flex; gap: 6px; overflow-x: auto;
-  padding: 8px 12px; scrollbar-width: none;
+/* Гамбургер-кнопка */
+#menuBtn {
+  background: none; border: 0; color: var(--text);
+  padding: 6px; margin: -6px 6px -6px -8px;
+  cursor: pointer; display: flex; align-items: center;
+  border-radius: 8px;
 }
-#levelBar::-webkit-scrollbar { display: none; }
-#levelBar button {
-  flex-shrink: 0; padding: 6px 14px; border-radius: 999px;
-  border: 1px solid var(--border); background: var(--card);
-  color: var(--muted); font-family: inherit; font-size: 13px;
-  cursor: pointer; white-space: nowrap;
+#menuBtn:active { background: var(--card2); }
+
+/* Оверлей */
+#drawerOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  z-index: 200;
 }
-#levelBar button.active { background: var(--accent); color: #0b1020; border-color: var(--accent); font-weight: 600; }
-#levelBar button .n { opacity: 0.65; margin-left: 4px; font-size: 11px; }
+#drawerOverlay.open { opacity: 1; pointer-events: auto; }
+
+/* Боковая панель */
+#drawer {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 260px; max-width: 80vw;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  transform: translateX(-100%); transition: transform 0.22s ease;
+  z-index: 201;
+  display: flex; flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+#drawer.open { transform: translateX(0); }
+
+.drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px 12px; border-bottom: 1px solid var(--border);
+}
+.drawer-title {
+  font-size: 13px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600;
+}
+#drawerClose {
+  background: none; border: 0; color: var(--muted);
+  font-size: 18px; cursor: pointer; padding: 4px 8px;
+  border-radius: 8px; font-family: inherit;
+}
+#drawerClose:active { background: var(--card2); }
+
+#levelList { padding: 8px 0; overflow-y: auto; }
+#levelList button {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 12px 18px;
+  background: none; border: 0; color: var(--text);
+  font-family: inherit; font-size: 15px;
+  cursor: pointer; text-align: left;
+  border-left: 3px solid transparent;
+}
+#levelList button:hover { background: var(--card2); }
+#levelList button.active {
+  background: rgba(108,158,255,0.1);
+  border-left-color: var(--accent);
+  color: var(--accent); font-weight: 600;
+}
+#levelList button .n {
+  font-size: 12px; color: var(--muted);
+  background: var(--card2); padding: 2px 8px;
+  border-radius: 999px;
+}
+#levelList button.active .n {
+  background: var(--accent); color: #0b1020;
+}
 main { flex: 1; padding: 16px; max-width: 640px; margin: 0 auto; width: 100%; }
 nav {
   position: sticky; bottom: 0; z-index: 10;
@@ -90,15 +142,47 @@ nav button.active { color: var(--accent); }
 }
 .flashcard .hint { color: var(--muted); font-size: 13px; }
 .flashcard .back { width: 100%; text-align: left; }
-.flashcard .back .meanings { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
-.row { display: flex; gap: 8px; margin: 6px 0; align-items: baseline; }
-.row .label { color: var(--muted); font-size: 12px; min-width: 44px; text-transform: uppercase; letter-spacing: 0.5px; }
-.row .val { font-size: 15px; word-break: break-word; }
-.examples { margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 12px; }
-.examples .ex { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; font-size: 14px; align-items: flex-start; }
-.examples .ex .w { font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; font-size: 17px; }
-.examples .ex .r { color: var(--muted); font-size: 12px; }
-.examples .ex .m { color: var(--text); font-size: 12px; text-align: right; max-width: 55%; }
+.flashcard .back .meanings { margin-bottom: 14px; }
+
+.row {
+  display: flex; gap: 10px; margin: 8px 0;
+  align-items: baseline;
+}
+.row .label {
+  color: var(--muted); font-size: 11px; min-width: 44px;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  font-weight: 500;
+}
+.row .val { word-break: break-word; }
+
+.examples {
+  margin-top: 14px; border-top: 1px dashed var(--border);
+  padding-top: 14px;
+}
+.examples .ex {
+  display: flex; justify-content: space-between; gap: 14px;
+  padding: 8px 0; align-items: baseline;
+}
+.examples .ex > div:first-child { flex-shrink: 0; }
+.examples .ex .w {
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  font-size: 17px; line-height: 1.3;
+}
+.examples .ex .r {
+  color: var(--muted); font-size: 13px; margin-top: 2px;
+}
+.examples .ex .m { text-align: right; max-width: 60%; }
+
+/* Единый стиль для всех переводов (значение кандзи, чтения, переводы слов) */
+.flashcard .back .meanings,
+.row .val,
+.examples .ex .m {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  line-height: 1.55;
+  color: var(--text);
+}
 .btn {
   display: flex; align-items: center; justify-content: center;
   padding: 14px 12px; border-radius: 12px; border: 1px solid var(--border);
@@ -179,10 +263,16 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
 <body>
 <div id="app">
   <header>
-    <h1>漢 Kanji Study</h1>
-    <div class="badge" id="headerBadge"></div>
+  <button id="menuBtn" aria-label="Меню">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+  <h1>漢 Kanji Study</h1>
+  <div class="badge" id="headerBadge"></div>
   </header>
-  <div id="levelBar"></div>
   <main id="view"></main>
   <nav>
     <button data-tab="study"><span class="ico">📖</span>Учить</button>
@@ -191,6 +281,14 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
     <button data-tab="stats"><span class="ico">📊</span>Статистика</button>
   </nav>
 </div>
+<div id="drawerOverlay"></div>
+<aside id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-title">Уровни JLPT</div>
+    <button id="drawerClose" aria-label="Закрыть">✕</button>
+  </div>
+  <div id="levelList"></div>
+</aside>
 <div class="toast" id="toast"></div>
 
 <!-- Данные кандзи (генерируются скриптом generate_kanji.py) -->
@@ -201,6 +299,23 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
    Формат строки KANJI_DB: kanji|level|значения|онные|кунные|примеры
    Примеры: слово:чтение:перевод; слово:чтение:перевод
 ====================================================== */
+// Приводит первую букву к верхнему регистру
+function capFirst(s) {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function cleanMeaning(s) {
+  if (!s) return '';
+  let t = String(s);
+  // Нумерация "1) ", "2) ", "12) " — в начале или после пробела
+  t = t.replace(/(^|\s)\d+\)\s*/g, '$1');
+  // Множественные пробелы → один
+  t = t.replace(/\s+/g, ' ').trim();
+  // Хвостовые точки/запятые/точки с запятой (но не трогаем закрывающую скобку)
+  t = t.replace(/^[\s.,;:]+|[\s.,;:]+$/g, '');
+  return capFirst(t);
+}
 function parseData(raw) {
   return raw.split('\n').map(line => {
     const parts = line.split('|');
@@ -211,13 +326,13 @@ function parseData(raw) {
       if (seg.length < 2) return null;
       const w = seg[0].trim();
       const r = (seg[1] || '').trim();
-      const m = seg.slice(2).join(':').trim();
+      const m = cleanMeaning(seg.slice(2).join(':').trim());
       return w ? { word: w, reading: r, meaning: m } : null;
     }).filter(Boolean);
     return {
       kanji: k.trim(),
       level: (level || 'N5').trim(),
-      meanings: meanings.split(',').map(s => s.trim()).filter(Boolean),
+      meanings: meanings.split(',').map(s => cleanMeaning(s.trim())).filter(Boolean),
       // Убираем точку в кунных чтениях (нотация окуриганы)
       on: on.split(',').map(s => s.trim()).filter(Boolean),
       kun: kun.split(',').map(s => s.trim().replace(/\./g, '')).filter(Boolean),
@@ -337,23 +452,37 @@ function buildStudyQueue() {
 /* ====================== UI ====================== */
 const view = document.getElementById('view');
 const headerBadge = document.getElementById('headerBadge');
-const levelBar = document.getElementById('levelBar');
+const levelList = document.getElementById('levelList');
+const drawer = document.getElementById('drawer');
+const drawerOverlay = document.getElementById('drawerOverlay');
 
 function renderLevelBar() {
-  const items = [{ id: 'all', label: 'Все', n: TOTAL }]
+  const items = [{ id: 'all', label: 'Все уровни', n: TOTAL }]
     .concat(LEVELS.map(lv => ({ id: lv, label: lv, n: LEVEL_COUNTS[lv] })));
-  levelBar.innerHTML = items.map(it => `
+  levelList.innerHTML = items.map(it => `
     <button class="${state.levelFilter === it.id ? 'active' : ''}" onclick="setLevel('${it.id}')">
-      ${it.label}<span class="n">${it.n}</span>
+      <span>${it.label}</span>
+      <span class="n">${it.n}</span>
     </button>`).join('');
 }
+
+function openDrawer() {
+  renderLevelBar();
+  drawer.classList.add('open');
+  drawerOverlay.classList.add('open');
+}
+function closeDrawer() {
+  drawer.classList.remove('open');
+  drawerOverlay.classList.remove('open');
+}
+
 function setLevel(lv) {
   state.levelFilter = lv;
   state.studyQueue = [];
   state.studyIndex = 0;
-  state.studyFlipped = false;
   sessionReviewed = new Set();
   state.quiz = null;
+  closeDrawer();
   save(); render();
 }
 
@@ -810,6 +939,20 @@ document.querySelectorAll('nav button').forEach(b => {
     render();
   });
 });
+/* Меню */
+document.getElementById('menuBtn').addEventListener('click', openDrawer);
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+drawerOverlay.addEventListener('click', closeDrawer);
+
+// Свайп влево, чтобы закрыть
+let touchStartX = 0;
+drawer.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+drawer.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (dx < -60) closeDrawer();
+}, { passive: true });
 load();
 render();
 </script>
