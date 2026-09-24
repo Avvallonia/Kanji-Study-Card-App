@@ -250,7 +250,6 @@ const state = {
   levelFilter: 'all',
   studyQueue: [],
   studyIndex: 0,
-  studyFlipped: false,
   quiz: null,
   history: {}
 };
@@ -382,7 +381,6 @@ function renderStudy() {
   if (state.studyQueue.length === 0) {
     state.studyQueue = buildStudyQueue();
     state.studyIndex = 0;
-    state.studyFlipped = false;
   }
   if (state.studyIndex >= state.studyQueue.length) {
     const today = new Date().toISOString().slice(0, 10);
@@ -396,27 +394,15 @@ function renderStudy() {
       </div>`;
     return;
   }
+
   const d = state.studyQueue[state.studyIndex];
   const c = getCard(d.kanji);
   const statusLabel = { new: 'Новая', learning: 'Учится', review: 'Повтор' }[c.status];
 
-  if (!state.studyFlipped) {
-    view.innerHTML = `
-      <div class="card flashcard" onclick="flip()">
-        <div class="kanji">${d.kanji}</div>
-        <div class="hint">${statusLabel} · ${d.level} · Нажми, чтобы открыть</div>
-      </div>
-      <div class="card" style="text-align:center;">
-        <button class="btn btn-primary" onclick="flip()" style="width:100%;">Показать ответ</button>
-        <div style="color:var(--muted); font-size:12px; margin-top:10px;">
-          ${state.studyIndex + 1} / ${state.studyQueue.length}
-        </div>
-      </div>`;
-    return;
-  }
   view.innerHTML = `
-    <div class="card flashcard">
-      <div class="kanji" style="font-size:72px; margin-bottom:4px;">${d.kanji}</div>
+    <div class="card flashcard" style="min-height:auto;">
+      <div class="kanji" style="font-size:96px; margin-bottom:8px;">${d.kanji}</div>
+      <div class="hint" style="margin-bottom:14px;">${statusLabel} · ${d.level}</div>
       <div class="back">
         <div class="meanings">${d.meanings.join(', ')}</div>
         ${d.on.length ? `<div class="row"><span class="label">On</span><span class="val">${d.on.join('、')}</span></div>` : ''}
@@ -431,7 +417,7 @@ function renderStudy() {
           </div>` : ''}
       </div>
     </div>
-       <div class="btn-row-2">
+    <div class="btn-row-2">
       <button class="btn" ${state.studyIndex === 0 ? 'disabled' : ''} onclick="prevCard()">← Предыдущий</button>
       <button class="btn btn-primary" onclick="nextCard()">Следующий →</button>
     </div>
@@ -439,7 +425,6 @@ function renderStudy() {
       ${state.studyIndex + 1} / ${state.studyQueue.length}
     </div>`;
 }
-
 function nextIntervalLabel(k, q) {
   const c = getCard(k);
   let interval;
@@ -452,7 +437,6 @@ function nextIntervalLabel(k, q) {
   if (interval < 365) return Math.round(interval / 30) + 'м';
   return (interval / 365).toFixed(1) + 'г';
 }
-function flip() { state.studyFlipped = true; renderStudy(); }
 
 // Отслеживаем, что уже оценили в этой сессии, чтобы не дублировать
 let sessionReviewed = new Set();
