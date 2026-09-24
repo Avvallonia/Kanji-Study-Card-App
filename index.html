@@ -44,7 +44,36 @@ header {
   display: flex; align-items: center; justify-content: space-between;
 }
 header h1 { font-size: 17px; margin: 0; font-weight: 600; letter-spacing: 0.3px; }
-header .badge { font-size: 12px; color: var(--muted); }
+header .badge {
+  font-size: 12px; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; padding: 6px 10px; border-radius: 999px;
+  background: var(--card); border: 1px solid var(--border);
+  user-select: none;
+}
+header .badge:active { background: var(--card2); }
+header .badge .sep { opacity: 0.3; }
+
+/* Попап-подсказка */
+#badgePop {
+  position: fixed; top: calc(env(safe-area-inset-top) + 52px); right: 12px;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 16px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  z-index: 150; max-width: 280px;
+  opacity: 0; pointer-events: none; transform: translateY(-6px);
+  transition: opacity 0.18s, transform 0.18s;
+  font-size: 13px; line-height: 1.5;
+}
+#badgePop.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#badgePop .row2 {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 6px 0;
+}
+#badgePop .row2 + .row2 { border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px; }
+#badgePop .ico2 { font-size: 18px; line-height: 1; flex-shrink: 0; }
+#badgePop .txt { color: var(--muted); font-size: 12px; }
+#badgePop .txt b { color: var(--text); font-weight: 600; }
 /* Гамбургер-кнопка */
 #menuBtn {
   background: none; border: 0; color: var(--text);
@@ -289,10 +318,12 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
   </div>
   <div id="levelList"></div>
 </aside>
+<div id="badgePop"></div>
 <div class="toast" id="toast"></div>
 
 <!-- Данные кандзи (генерируются скриптом generate_kanji.py) -->
 <script src="kanji_data.js"></script>
+<script src="warodai_mini.js"></script>
 
 <script>
 /* ====================== ПАРСИНГ ======================
@@ -321,19 +352,36 @@ function parseData(raw) {
     const parts = line.split('|');
     if (parts.length < 4) return null;
     const [k, level, meanings, on, kun, ex] = parts;
-    const examples = (ex || '').split(';').map(s => {
+        const examples = (ex || '').split(';').map(s => {
       const seg = s.split(':');
       if (seg.length < 2) return null;
       const w = seg[0].trim();
       const r = (seg[1] || '').trim();
-      const m = cleanMeaning(seg.slice(2).join(':').trim());
-      return w ? { word: w, reading: r, meaning: m } : null;
+      // Приоритет: Warodai (точное совпадение слово+чтение, потом по слову)
+      let m = '';
+      if (typeof WARODAI !== 'undefined') {
+        m = WARODAI[`${w}:${r}`] || WARODAI[`${w}:`] || '';
+      }
+      if (!m) m = seg.slice(2).join(':').trim();
+      return w ? { word: w, reading: r, meaning: cleanMeaning(m) } : null;
     }).filter(Boolean);
+
+    const kanjiKey = k.trim();
+
+    // Значение кандзи: если Warodai знает кандзи как слово — берём его
+    let kanjiMeanings = null;
+    if (typeof WARODAI !== 'undefined') {
+      const wd = WARODAI[`${kanjiKey}:`];
+      if (wd) kanjiMeanings = [cleanMeaning(wd)];
+    }
+    if (!kanjiMeanings) {
+      kanjiMeanings = meanings.split(',').map(s => cleanMeaning(s.trim())).filter(Boolean);
+    }
+
     return {
-      kanji: k.trim(),
+      kanji: kanjiKey,
       level: (level || 'N5').trim(),
-      meanings: meanings.split(',').map(s => cleanMeaning(s.trim())).filter(Boolean),
-      // Убираем точку в кунных чтениях (нотация окуриганы)
+      meanings: kanjiMeanings,
       on: on.split(',').map(s => s.trim()).filter(Boolean),
       kun: kun.split(',').map(s => s.trim().replace(/\./g, '')).filter(Boolean),
       examples
@@ -497,13 +545,71 @@ function render() {
   if (state.tab === 'stats') renderStats();
   updateHeaderBadge();
 }
+function calcStreak() {
+  let streak = 0;
+  const d = new Date();
+  for (let i = 0; i < 365; i++) {
+    const key = d.toISOString().slice(0, 10);
+    if (state.history[key] > 0) { streak++; d.setDate(d.getDate() - 1); }
+    else if (i === 0) { d.setDate(d.getDate() - 1); } // сегодня может быть 0
+    else break;
+  }
+  return streak;
+}
+
 function updateHeaderBadge() {
   const due = dueCards().length;
   const nw = Math.min(newCards().length, state.settings.newPerDay);
   const today = new Date().toISOString().slice(0, 10);
   const done = state.history[today] || 0;
-  headerBadge.textContent = `📅 ${done} · 🔔 ${due + nw}`;
+  const streak = calcStreak();
+  headerBadge.innerHTML = `
+    <span>📅 ${done}</span>
+    <span class="sep">·</span>
+    <span>🔔 ${due + nw}</span>
+    <span class="sep">·</span>
+    <span>🔥 ${streak}</span>`;
 }
+
+function toggleBadgePop() {
+  const pop = document.getElementById('badgePop');
+  if (pop.classList.contains('open')) {
+    pop.classList.remove('open');
+    return;
+  }
+  const due = dueCards().length;
+  const nw = Math.min(newCards().length, state.settings.newPerDay);
+  const today = new Date().toISOString().slice(0, 10);
+  const done = state.history[today] || 0;
+  const streak = calcStreak();
+
+  pop.innerHTML = `
+    <div class="row2">
+      <div class="ico2">📅</div>
+      <div class="txt"><b>${done}</b> — повторено сегодня.<br>Счётчик сбрасывается каждый день.</div>
+    </div>
+    <div class="row2">
+      <div class="ico2">🔔</div>
+      <div class="txt"><b>${due + nw}</b> — ждут изучения сейчас.<br>
+      Просроченных к повтору: <b>${due}</b>, новых на сегодня: <b>${nw}</b>.</div>
+    </div>
+    <div class="row2">
+      <div class="ico2">🔥</div>
+      <div class="txt"><b>${streak}</b> — дней подряд.<br>
+      ${streak === 0 ? 'Начни заниматься, чтобы зажечь огонь.' :
+        streak === 1 ? 'Один день — хорошее начало!' :
+        'Продолжай в том же духе!'}</div>
+    </div>`;
+  pop.classList.add('open');
+}
+
+// Закрытие по тапу вне попапа
+document.addEventListener('click', e => {
+  const pop = document.getElementById('badgePop');
+  if (!pop || !pop.classList.contains('open')) return;
+  if (pop.contains(e.target) || headerBadge.contains(e.target)) return;
+  pop.classList.remove('open');
+});
 
 /* ---------------- STUDY ---------------- */
 function renderStudy() {
@@ -519,7 +625,7 @@ function renderStudy() {
         <div class="big">🎉</div>
         <p>Все карточки на сегодня пройдены!</p>
         <p style="font-size:12px;">Повторено сегодня: <b>${done}</b></p>
-        <button class="btn btn-primary" style="margin-top:20px;" onclick="rebuildStudy()">Проверить новые</button>
+        <button class="btn btn-primary" style="margin-top:20px;" onclick="rebuildStudy()">Изучить новые</button>
       </div>`;
     return;
   }
@@ -642,10 +748,18 @@ function renderQuiz() {
     <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:12px;">${q.done} / ${q.total} · Правильно: ${q.correct}</div>`;
 }
 function startQuiz(mode) {
-  const pool = byLevel(DATA).filter(d => getCard(d.kanji).status !== 'new');
+  const pool = shuffle(byLevel(DATA).filter(d => getCard(d.kanji).status !== 'new'));
   if (pool.length < 4) { toast('Изучи хотя бы 4 кандзи в этом уровне'); return; }
-  const total = Math.min(20, pool.length);
-  state.quiz = { mode, pool, total, done: 0, correct: 0 };
+  // Берём 20 уникальных кандзи, без повторов
+  const selected = pool.slice(0, Math.min(20, pool.length));
+  state.quiz = {
+    mode,
+    questions: selected,  // заранее выбранные уникальные кандзи
+    total: selected.length,
+    done: 0,
+    correct: 0,
+    usedDistractors: new Set()  // чтобы дистракторы тоже не повторялись
+  };
   nextQuiz();
 }
 function nextQuiz() {
@@ -661,17 +775,36 @@ function nextQuiz() {
     state.quiz = null;
     return;
   }
-  const item = q.pool[Math.floor(Math.random() * q.pool.length)];
+
+  // Берём заранее выбранный уникальный кандзи по порядку
+  const item = q.questions[q.done];
   let correct, key;
   if (q.mode === 'kanji2meaning') { correct = item.meanings[0]; key = d => d.meanings[0]; }
   else if (q.mode === 'kanji2reading') { correct = item.kun[0] || item.on[0]; key = d => d.kun[0] || d.on[0]; }
   else { correct = item.kanji; key = d => d.kanji; }
 
-  const others = DATA.filter(d => d.kanji !== item.kanji && key(d) !== correct);
-  const distractors = shuffle(others).slice(0, 3).map(key);
+  // Дистракторы: 3 разных кандзи, исключаем уже использованные в этом вопросе,
+  // и исключаем возможность повтора одинаковых вариантов
+  const others = shuffle(
+    DATA.filter(d => d.kanji !== item.kanji && key(d) !== correct && key(d))
+  );
+  const seenOptions = new Set([correct]);
+  const distractors = [];
+  for (const d of others) {
+    const opt = key(d);
+    if (!seenOptions.has(opt)) {
+      seenOptions.add(opt);
+      distractors.push(opt);
+    }
+    if (distractors.length === 3) break;
+  }
   const options = shuffle([correct, ...distractors]);
 
-  q.item = item; q.correctText = correct; q.options = options; q.answered = false; q.done++;
+  q.item = item;
+  q.correctText = correct;
+  q.options = options;
+  q.answered = false;
+  q.done++;
   render();
 }
 function quizAnswer(i) {
@@ -953,6 +1086,10 @@ drawer.addEventListener('touchend', e => {
   const dx = e.changedTouches[0].clientX - touchStartX;
   if (dx < -60) closeDrawer();
 }, { passive: true });
+headerBadge.addEventListener('click', e => {
+  e.stopPropagation();
+  toggleBadgePop();
+});
 load();
 render();
 </script>
