@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Kanji Study</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>漢</text></svg>">
+<style>
+:root {
+  --bg: #0f1115;
+  --card: #1a1d24;
+  --card2: #222732;
+  --border: #262b36;
+  --text: #e6e9ef;
+  --muted: #8b95a7;
+  --accent: #6c9eff;
+  --good: #4ade80;
+  --bad: #f87171;
+  --warn: #fbbf24;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px; overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+}
+#app { display: flex; flex-direction: column; min-height: 100dvh; padding-bottom: env(safe-area-inset-bottom); }
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(15,17,21,0.9);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: calc(env(safe-area-inset-top) + 10px) 16px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+header h1 { font-size: 17px; margin: 0; font-weight: 600; letter-spacing: 0.3px; }
+header .badge { font-size: 12px; color: var(--muted); }
+#levelBar {
+  position: sticky; top: calc(env(safe-area-inset-top) + 45px); z-index: 9;
+  background: rgba(15,17,21,0.95);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 6px; overflow-x: auto;
+  padding: 8px 12px; scrollbar-width: none;
+}
+#levelBar::-webkit-scrollbar { display: none; }
+#levelBar button {
+  flex-shrink: 0; padding: 6px 14px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--muted); font-family: inherit; font-size: 13px;
+  cursor: pointer; white-space: nowrap;
+}
+#levelBar button.active { background: var(--accent); color: #0b1020; border-color: var(--accent); font-weight: 600; }
+#levelBar button .n { opacity: 0.65; margin-left: 4px; font-size: 11px; }
+main { flex: 1; padding: 16px; max-width: 640px; margin: 0 auto; width: 100%; }
+nav {
+  position: sticky; bottom: 0; z-index: 10;
+  background: rgba(15,17,21,0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+nav button {
+  background: none; border: 0; color: var(--muted); font-size: 11px;
+  padding: 8px 4px 10px; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; font-family: inherit;
+}
+nav button .ico { font-size: 20px; line-height: 1; }
+nav button.active { color: var(--accent); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 14px; }
+.flashcard {
+  min-height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; cursor: pointer; user-select: none;
+}
+.flashcard .kanji {
+  font-size: 120px; line-height: 1;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  margin-bottom: 16px;
+}
+.flashcard .hint { color: var(--muted); font-size: 13px; }
+.flashcard .back { width: 100%; text-align: left; }
+.flashcard .back .meanings { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+.row { display: flex; gap: 8px; margin: 6px 0; align-items: baseline; }
+.row .label { color: var(--muted); font-size: 12px; min-width: 44px; text-transform: uppercase; letter-spacing: 0.5px; }
+.row .val { font-size: 15px; word-break: break-word; }
+.examples { margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 12px; }
+.examples .ex { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; font-size: 14px; align-items: flex-start; }
+.examples .ex .w { font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; font-size: 17px; }
+.examples .ex .r { color: var(--muted); font-size: 12px; }
+.examples .ex .m { color: var(--text); font-size: 12px; text-align: right; max-width: 55%; }
+.btn {
+  display: flex; align-items: center; justify-content: center;
+  padding: 14px 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--card2); color: var(--text);
+  font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer;
+  transition: transform 0.05s;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--accent); color: #0b1020; border-color: var(--accent); font-weight: 600; }
+.btn-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+.btn-again { background: rgba(248,113,113,0.15); border-color: rgba(248,113,113,0.4); color: var(--bad); }
+.btn-hard  { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.4); color: var(--warn); }
+.btn-good  { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.4); color: var(--good); }
+.btn-easy  { background: rgba(108,158,255,0.15); border-color: rgba(108,158,255,0.45); color: var(--accent); }
+.btn-again small, .btn-hard small, .btn-good small, .btn-easy small {
+  display: block; font-size: 10px; opacity: 0.75; font-weight: 400; margin-top: 2px;
+}
+.btn-stack { display: flex; flex-direction: column; align-items: center; }
+.bar { height: 6px; background: var(--card2); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+.bar .fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.3s; }
+.quiz-q { text-align: center; padding: 24px 12px; }
+.quiz-q .big { font-size: 84px; font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; line-height: 1; }
+.quiz-q .prompt { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+.opts { display: grid; gap: 10px; }
+.opt {
+  padding: 16px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--card2); color: var(--text); font-family: inherit; font-size: 16px;
+  cursor: pointer; text-align: left;
+}
+.opt.correct { background: rgba(74,222,128,0.15); border-color: var(--good); color: var(--good); }
+.opt.wrong { background: rgba(248,113,113,0.15); border-color: var(--bad); color: var(--bad); }
+.opt:disabled { cursor: default; opacity: 0.85; }
+.search {
+  width: 100%; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--text); font-family: inherit; font-size: 15px; margin-bottom: 12px;
+}
+.search:focus { outline: none; border-color: var(--accent); }
+.klist { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
+.kitem {
+  aspect-ratio: 1; background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-size: 30px; font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  cursor: pointer; position: relative;
+}
+.kitem .dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+.kitem[data-status="learning"] .dot { background: var(--warn); }
+.kitem[data-status="review"] .dot { background: var(--good); }
+.kitem[data-status="new"] .dot { background: var(--accent); }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.stat .n { font-size: 26px; font-weight: 700; }
+.stat .l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin: 20px 0 10px; }
+.empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 14px; }
+.empty .big { font-size: 48px; margin-bottom: 8px; opacity: 0.4; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 80px);
+  transform: translateX(-50%) translateY(20px);
+  background: var(--card2); color: var(--text);
+  padding: 10px 16px; border-radius: 999px; font-size: 13px;
+  border: 1px solid var(--border); opacity: 0; transition: all 0.25s;
+  pointer-events: none; z-index: 100;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.canvas-wrap { position: relative; width: 100%; aspect-ratio: 1; max-width: 240px; margin: 0 auto; }
+canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; touch-action: none; display: block; }
+.canvas-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 140px; font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  color: #e0e0e0; user-select: none;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>漢 Kanji Study</h1>
+    <div class="badge" id="headerBadge"></div>
+  </header>
+  <div id="levelBar"></div>
+  <main id="view"></main>
+  <nav>
+    <button data-tab="study"><span class="ico">📖</span>Учить</button>
+    <button data-tab="quiz"><span class="ico">✅</span>Тест</button>
+    <button data-tab="browse"><span class="ico">📚</span>Все</button>
+    <button data-tab="stats"><span class="ico">📊</span>Статистика</button>
+  </nav>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- Данные кандзи (генерируются скриптом generate_kanji.py) -->
+<script src="kanji_data.js"></script>
+
+<script>
+/* ====================== ПАРСИНГ ======================
+   Формат строки KANJI_DB: kanji|level|значения|онные|кунные|примеры
+   Примеры: слово:чтение:перевод; слово:чтение:перевод
+====================================================== */
+function parseData(raw) {
+  return raw.split('\n').map(line => {
+    const parts = line.split('|');
+    if (parts.length < 4) return null;
+    const [k, level, meanings, on, kun, ex] = parts;
+    const examples = (ex || '').split(';').map(s => {
+      const seg = s.split(':');
+      if (seg.length < 2) return null;
+      const w = seg[0].trim();
+      const r = (seg[1] || '').trim();
+      const m = seg.slice(2).join(':').trim();
+      return w ? { word: w, reading: r, meaning: m } : null;
+    }).filter(Boolean);
+    return {
+      kanji: k.trim(),
+      level: (level || 'N5').trim(),
+      meanings: meanings.split(',').map(s => s.trim()).filter(Boolean),
+      // Убираем точку в кунных чтениях (нотация окуриганы)
+      on: on.split(',').map(s => s.trim()).filter(Boolean),
+      kun: kun.split(',').map(s => s.trim().replace(/\./g, '')).filter(Boolean),
+      examples
+    };
+  }).filter(Boolean);
+}
+
+if (typeof KANJI_DB === 'undefined') {
+  document.getElementById('view').innerHTML =
+    '<div class="empty"><div class="big">⚠️</div><p>Файл kanji_data.js не найден.<br>Положи его рядом с index.html.</p></div>';
+  throw new Error('KANJI_DB missing');
+}
+
+const DATA = parseData(KANJI_DB);
+const BY_KANJI = Object.fromEntries(DATA.map(d => [d.kanji, d]));
+const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
+const LEVEL_COUNTS = LEVELS.reduce((acc, lv) => {
+  acc[lv] = DATA.filter(d => d.level === lv).length;
+  return acc;
+}, {});
+const TOTAL = DATA.length;
+
+/* ====================== СОСТОЯНИЕ ====================== */
+const STORAGE_KEY = 'kanji-study-v2';
+const state = {
+  progress: {},
+  settings: { newPerDay: 10 },
+  tab: 'study',
+  levelFilter: 'all',
+  studyQueue: [],
+  studyIndex: 0,
+  studyFlipped: false,
+  quiz: null,
+  history: {}
+};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      Object.assign(state, {
+        progress: saved.progress || {},
+        settings: saved.settings || state.settings,
+        levelFilter: saved.levelFilter || 'all',
+        history: saved.history || {}
+      });
+    }
+  } catch (e) { console.warn('Load failed', e); }
+}
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      progress: state.progress,
+      settings: state.settings,
+      levelFilter: state.levelFilter,
+      history: state.history
+    }));
+  } catch (e) { console.warn('Save failed', e); }
+}
+
+/* ====================== SRS ====================== */
+const DAY = 24 * 60 * 60 * 1000;
+const MIN = 60 * 1000;
+
+function getCard(k) {
+  return state.progress[k] || {
+    interval: 0, ease: 2.5, reps: 0, lapses: 0,
+    due: 0, status: 'new', lastReview: 0
+  };
+}
+
+function review(k, quality) {
+  const c = { ...getCard(k) };
+  const now = Date.now();
+  c.reps++;
+  c.lastReview = now;
+  if (quality === 0) {
+    c.lapses++;
+    c.ease = Math.max(1.3, c.ease - 0.2);
+    c.interval = 0;
+    c.status = 'learning';
+    c.due = now + MIN;
+  } else {
+    if (quality === 1) { c.ease = Math.max(1.3, c.ease - 0.15); c.interval = c.interval === 0 ? 1 : Math.max(1, c.interval * 1.2); }
+    else if (quality === 2) { c.interval = c.interval === 0 ? 1 : c.interval * c.ease; }
+    else { c.ease = Math.min(3.0, c.ease + 0.15); c.interval = c.interval === 0 ? 3 : c.interval * c.ease * 1.3; }
+    c.status = c.reps >= 2 ? 'review' : 'learning';
+    c.due = now + c.interval * DAY;
+  }
+  state.progress[k] = c;
+  const today = new Date().toISOString().slice(0, 10);
+  state.history[today] = (state.history[today] || 0) + 1;
+  save();
+}
+
+/* ====================== ФИЛЬТР ПО УРОВНЮ ====================== */
+function byLevel(arr) {
+  return state.levelFilter === 'all' ? arr : arr.filter(d => d.level === state.levelFilter);
+}
+function dueCards() {
+  const now = Date.now();
+  return byLevel(DATA).filter(d => {
+    const c = getCard(d.kanji);
+    return c.status !== 'new' && c.due <= now;
+  });
+}
+function newCards() {
+  return byLevel(DATA).filter(d => getCard(d.kanji).status === 'new');
+}
+function buildStudyQueue() {
+  const due = dueCards().sort((a, b) => getCard(a.kanji).due - getCard(b.kanji).due);
+  const nw = newCards().slice(0, state.settings.newPerDay);
+  return [...due, ...nw];
+}
+
+/* ====================== UI ====================== */
+const view = document.getElementById('view');
+const headerBadge = document.getElementById('headerBadge');
+const levelBar = document.getElementById('levelBar');
+
+function renderLevelBar() {
+  const items = [{ id: 'all', label: 'Все', n: TOTAL }]
+    .concat(LEVELS.map(lv => ({ id: lv, label: lv, n: LEVEL_COUNTS[lv] })));
+  levelBar.innerHTML = items.map(it => `
+    <button class="${state.levelFilter === it.id ? 'active' : ''}" onclick="setLevel('${it.id}')">
+      ${it.label}<span class="n">${it.n}</span>
+    </button>`).join('');
+}
+function setLevel(lv) {
+  state.levelFilter = lv;
+  state.studyQueue = [];
+  state.studyIndex = 0;
+  state.studyFlipped = false;
+  state.quiz = null;
+  save(); render();
+}
+
+function render() {
+  document.querySelectorAll('nav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === state.tab);
+  });
+  renderLevelBar();
+  if (state.tab === 'study') renderStudy();
+  if (state.tab === 'quiz') renderQuiz();
+  if (state.tab === 'browse') renderBrowse();
+  if (state.tab === 'stats') renderStats();
+  updateHeaderBadge();
+}
+function updateHeaderBadge() {
+  const due = dueCards().length;
+  const nw = Math.min(newCards().length, state.settings.newPerDay);
+  const today = new Date().toISOString().slice(0, 10);
+  const done = state.history[today] || 0;
+  headerBadge.textContent = `📅 ${done} · 🔔 ${due + nw}`;
+}
+
+/* ---------------- STUDY ---------------- */
+function renderStudy() {
+  if (state.studyQueue.length === 0) {
+    state.studyQueue = buildStudyQueue();
+    state.studyIndex = 0;
+    state.studyFlipped = false;
+  }
+  if (state.studyIndex >= state.studyQueue.length) {
+    const today = new Date().toISOString().slice(0, 10);
+    const done = state.history[today] || 0;
+    view.innerHTML = `
+      <div class="empty">
+        <div class="big">🎉</div>
+        <p>Все карточки на сегодня пройдены!</p>
+        <p style="font-size:12px;">Повторено сегодня: <b>${done}</b></p>
+        <button class="btn btn-primary" style="margin-top:20px;" onclick="rebuildStudy()">Проверить новые</button>
+      </div>`;
+    return;
+  }
+  const d = state.studyQueue[state.studyIndex];
+  const c = getCard(d.kanji);
+  const statusLabel = { new: 'Новая', learning: 'Учится', review: 'Повтор' }[c.status];
+
+  if (!state.studyFlipped) {
+    view.innerHTML = `
+      <div class="card flashcard" onclick="flip()">
+        <div class="kanji">${d.kanji}</div>
+        <div class="hint">${statusLabel} · ${d.level} · Нажми, чтобы открыть</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <button class="btn btn-primary" onclick="flip()" style="width:100%;">Показать ответ</button>
+        <div style="color:var(--muted); font-size:12px; margin-top:10px;">
+          ${state.studyIndex + 1} / ${state.studyQueue.length}
+        </div>
+      </div>`;
+    return;
+  }
+  view.innerHTML = `
+    <div class="card flashcard">
+      <div class="kanji" style="font-size:72px; margin-bottom:4px;">${d.kanji}</div>
+      <div class="back">
+        <div class="meanings">${d.meanings.join(', ')}</div>
+        ${d.on.length ? `<div class="row"><span class="label">On</span><span class="val">${d.on.join('、')}</span></div>` : ''}
+        ${d.kun.length ? `<div class="row"><span class="label">Kun</span><span class="val">${d.kun.join('、')}</span></div>` : ''}
+        ${d.examples.length ? `
+          <div class="examples">
+            ${d.examples.map(e => `
+              <div class="ex">
+                <div><span class="w">${e.word}</span><div class="r">${e.reading}</div></div>
+                <div class="m">${e.meaning}</div>
+              </div>`).join('')}
+          </div>` : ''}
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-again" onclick="answer(0)"><div class="btn-stack">Снова<small>&lt;1м</small></div></button>
+      <button class="btn btn-hard"  onclick="answer(1)"><div class="btn-stack">Сложно<small>${nextIntervalLabel(d.kanji,1)}</small></div></button>
+      <button class="btn btn-good"  onclick="answer(2)"><div class="btn-stack">Норм<small>${nextIntervalLabel(d.kanji,2)}</small></div></button>
+      <button class="btn btn-easy"  onclick="answer(3)"><div class="btn-stack">Легко<small>${nextIntervalLabel(d.kanji,3)}</small></div></button>
+    </div>
+    <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:10px;">
+      ${state.studyIndex + 1} / ${state.studyQueue.length}
+    </div>`;
+}
+
+function nextIntervalLabel(k, q) {
+  const c = getCard(k);
+  let interval;
+  if (q === 0) return '<1м';
+  if (q === 1) interval = c.interval === 0 ? 1 : Math.max(1, c.interval * 1.2);
+  else if (q === 2) interval = c.interval === 0 ? 1 : c.interval * c.ease;
+  else interval = c.interval === 0 ? 3 : c.interval * c.ease * 1.3;
+  if (interval < 1) return '<1д';
+  if (interval < 30) return Math.round(interval) + 'д';
+  if (interval < 365) return Math.round(interval / 30) + 'м';
+  return (interval / 365).toFixed(1) + 'г';
+}
+function flip() { state.studyFlipped = true; renderStudy(); }
+function answer(q) {
+  const d = state.studyQueue[state.studyIndex];
+  review(d.kanji, q);
+  if (q === 0) state.studyQueue.push(d);
+  state.studyIndex++;
+  state.studyFlipped = false;
+  renderStudy();
+  updateHeaderBadge();
+}
+function rebuildStudy() {
+  state.studyQueue = buildStudyQueue();
+  state.studyIndex = 0;
+  state.studyFlipped = false;
+  renderStudy();
+}
+
+/* ---------------- QUIZ ---------------- */
+function renderQuiz() {
+  if (!state.quiz) {
+    const pool = byLevel(DATA).filter(d => getCard(d.kanji).status !== 'new');
+    view.innerHTML = `
+      <h2>Режим теста · ${state.levelFilter === 'all' ? 'все уровни' : state.levelFilter}</h2>
+      <div class="card" style="padding:0; overflow:hidden;">
+        <button class="btn" style="width:100%; border:0; border-radius:0; padding:18px; justify-content:flex-start;" onclick="startQuiz('kanji2meaning')">🈁 Кандзи → Значение</button>
+        <button class="btn" style="width:100%; border:0; border-radius:0; border-top:1px solid var(--border); padding:18px; justify-content:flex-start;" onclick="startQuiz('kanji2reading')">🗣️ Кандзи → Чтение (kun)</button>
+        <button class="btn" style="width:100%; border:0; border-radius:0; border-top:1px solid var(--border); padding:18px; justify-content:flex-start;" onclick="startQuiz('meaning2kanji')">🔎 Значение → Кандзи</button>
+      </div>
+      <p style="color:var(--muted); font-size:12px; text-align:center; margin-top:16px;">
+        Доступно для теста: ${pool.length} кандзи.
+      </p>`;
+    return;
+  }
+  const q = state.quiz;
+  const item = q.item;
+  if (q.mode === 'kanji2meaning' || q.mode === 'kanji2reading') {
+    const prompt = q.mode === 'kanji2meaning' ? 'Что значит этот кандзи?' : 'Кунное чтение?';
+    view.innerHTML = `
+      <div class="card quiz-q">
+        <div class="prompt">${prompt}</div>
+        <div class="big">${item.kanji}</div>
+      </div>
+      <div class="opts">
+        ${q.options.map((opt, i) => `<button class="opt" ${q.answered ? 'disabled' : ''} data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
+      </div>
+      ${q.answered ? `<button class="btn btn-primary" style="width:100%; margin-top:14px;" onclick="nextQuiz()">Дальше →</button>` : ''}
+      <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:12px;">${q.done} / ${q.total} · Правильно: ${q.correct}</div>`;
+    return;
+  }
+  view.innerHTML = `
+    <div class="card quiz-q">
+      <div class="prompt">Выбери кандзи</div>
+      <div style="font-size:22px; font-weight:600; margin:14px 0;">${item.meanings.join(', ')}</div>
+    </div>
+    <div class="opts">
+      ${q.options.map((opt, i) => `<button class="opt" ${q.answered ? 'disabled' : ''} style="font-size:28px; text-align:center; font-family:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;" data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
+    </div>
+    ${q.answered ? `<button class="btn btn-primary" style="width:100%; margin-top:14px;" onclick="nextQuiz()">Дальше →</button>` : ''}
+    <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:12px;">${q.done} / ${q.total} · Правильно: ${q.correct}</div>`;
+}
+function startQuiz(mode) {
+  const pool = byLevel(DATA).filter(d => getCard(d.kanji).status !== 'new');
+  if (pool.length < 4) { toast('Изучи хотя бы 4 кандзи в этом уровне'); return; }
+  const total = Math.min(20, pool.length);
+  state.quiz = { mode, pool, total, done: 0, correct: 0 };
+  nextQuiz();
+}
+function nextQuiz() {
+  const q = state.quiz;
+  if (q.done >= q.total) {
+    view.innerHTML = `
+      <div class="empty">
+        <div class="big">🏁</div>
+        <p>Тест завершён!</p>
+        <p style="font-size:18px; margin-top:12px;">${q.correct} / ${q.total}</p>
+        <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="state.quiz=null; render();">Ещё раз</button>
+      </div>`;
+    state.quiz = null;
+    return;
+  }
+  const item = q.pool[Math.floor(Math.random() * q.pool.length)];
+  let correct, key;
+  if (q.mode === 'kanji2meaning') { correct = item.meanings[0]; key = d => d.meanings[0]; }
+  else if (q.mode === 'kanji2reading') { correct = item.kun[0] || item.on[0]; key = d => d.kun[0] || d.on[0]; }
+  else { correct = item.kanji; key = d => d.kanji; }
+
+  const others = DATA.filter(d => d.kanji !== item.kanji && key(d) !== correct);
+  const distractors = shuffle(others).slice(0, 3).map(key);
+  const options = shuffle([correct, ...distractors]);
+
+  q.item = item; q.correctText = correct; q.options = options; q.answered = false; q.done++;
+  render();
+}
+function quizAnswer(i) {
+  const q = state.quiz;
+  if (q.answered) return;
+  q.answered = true;
+  const chosen = q.options[i];
+  const isCorrect = chosen === q.correctText;
+  if (isCorrect) {
+    q.correct++;
+    const c = getCard(q.item.kanji);
+    if (c.status !== 'new') review(q.item.kanji, 2);
+  } else {
+    const c = getCard(q.item.kanji);
+    if (c.status !== 'new') review(q.item.kanji, 0);
+  }
+  document.querySelectorAll('.opt').forEach((el, j) => {
+    el.classList.remove('correct', 'wrong');
+    if (q.options[j] === q.correctText) el.classList.add('correct');
+    else if (j === i) el.classList.add('wrong');
+    el.disabled = true;
+  });
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-primary';
+  btn.style = 'width:100%; margin-top:14px;';
+  btn.textContent = 'Дальше →';
+  btn.onclick = nextQuiz;
+  document.querySelector('.opts').after(btn);
+}
+
+/* ---------------- BROWSE ---------------- */
+let browseQuery = '';
+function renderBrowse() {
+  const pool = byLevel(DATA);
+  const filtered = pool.filter(d => {
+    if (!browseQuery) return true;
+    const q = browseQuery.toLowerCase();
+    return d.kanji.includes(q)
+      || d.meanings.some(m => m.toLowerCase().includes(q))
+      || d.on.some(r => r.includes(q))
+      || d.kun.some(r => r.includes(q));
+  });
+  view.innerHTML = `
+    <input class="search" id="searchInput" placeholder="Поиск: кандзи, значение, чтение…" value="${browseQuery}">
+    <div class="klist">
+      ${filtered.slice(0, 500).map(d => {
+        const c = getCard(d.kanji);
+        return `<div class="kitem" data-status="${c.status}" onclick="openDetail('${d.kanji}')"><span class="dot"></span>${d.kanji}</div>`;
+      }).join('')}
+    </div>
+    <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:14px;">
+      Показано: ${Math.min(filtered.length, 500)} из ${filtered.length}
+      ${pool.length !== TOTAL ? ` · ${state.levelFilter}` : ''}
+    </div>`;
+  const input = document.getElementById('searchInput');
+  input.addEventListener('input', e => {
+    browseQuery = e.target.value;
+    renderBrowse();
+    const newInput = document.getElementById('searchInput');
+    newInput.focus();
+    newInput.setSelectionRange(browseQuery.length, browseQuery.length);
+  });
+}
+function openDetail(k) {
+  const d = BY_KANJI[k];
+  const c = getCard(k);
+  const dueLabel = c.status === 'new' ? '—' : new Date(c.due).toLocaleDateString('ru-RU');
+  view.innerHTML = `
+    <button class="btn" style="margin-bottom:14px;" onclick="renderBrowse()">← Назад</button>
+    <div class="card flashcard" style="min-height:auto; padding:24px;">
+      <div class="kanji" style="font-size:96px;">${d.kanji}</div>
+      <div class="back">
+        <div class="meanings">${d.meanings.join(', ')}</div>
+        <div class="row"><span class="label">Ур.</span><span class="val">${d.level}</span></div>
+        ${d.on.length ? `<div class="row"><span class="label">On</span><span class="val">${d.on.join('、')}</span></div>` : ''}
+        ${d.kun.length ? `<div class="row"><span class="label">Kun</span><span class="val">${d.kun.join('、')}</span></div>` : ''}
+        ${d.examples.length ? `<div class="examples">
+          ${d.examples.map(e => `
+            <div class="ex">
+              <div><span class="w">${e.word}</span><div class="r">${e.reading}</div></div>
+              <div class="m">${e.meaning}</div>
+            </div>`).join('')}
+        </div>` : ''}
+      </div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="label">Статус</span><span class="val">${{new:'Новый',learning:'Учится',review:'Повтор'}[c.status]}</span></div>
+      <div class="row"><span class="label">Повтор</span><span class="val">${dueLabel}</span></div>
+      <div class="row"><span class="label">Интервал</span><span class="val">${c.interval ? c.interval.toFixed(1) + ' дн.' : '—'}</span></div>
+      <div class="row"><span class="label">Ease</span><span class="val">${c.ease.toFixed(2)}</span></div>
+      <div class="row"><span class="label">Реп.</span><span class="val">${c.reps} (ошибок: ${c.lapses})</span></div>
+    </div>
+    <div class="card">
+      <div style="color:var(--muted); font-size:12px; margin-bottom:10px;">Пропиши кандзи пальцем:</div>
+      <div class="canvas-wrap">
+        <div class="canvas-bg">${d.kanji}</div>
+        <canvas id="writeCanvas"></canvas>
+      </div>
+      <button class="btn" style="width:100%; margin-top:12px;" onclick="clearCanvas()">Очистить</button>
+    </div>`;
+  initCanvas();
+}
+function initCanvas() {
+  const c = document.getElementById('writeCanvas');
+  if (!c) return;
+  const rect = c.getBoundingClientRect();
+  c.width = rect.width * 2; c.height = rect.height * 2;
+  const ctx = c.getContext('2d');
+  ctx.scale(2, 2); ctx.lineWidth = 8; ctx.lineCap = 'round';
+  ctx.lineJoin = 'round'; ctx.strokeStyle = '#1a1d24';
+  let drawing = false;
+  const pos = e => {
+    const r = c.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
+  };
+  c.addEventListener('mousedown', e => { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
+  c.addEventListener('mousemove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); });
+  c.addEventListener('mouseup', e => { drawing = false; e.preventDefault(); });
+  c.addEventListener('mouseleave', e => { drawing = false; });
+  c.addEventListener('touchstart', e => { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }, { passive: false });
+  c.addEventListener('touchmove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }, { passive: false });
+  c.addEventListener('touchend', e => { drawing = false; e.preventDefault(); });
+}
+function clearCanvas() {
+  const c = document.getElementById('writeCanvas');
+  if (!c) return;
+  c.getContext('2d').clearRect(0, 0, c.width, c.height);
+}
+
+/* ---------------- STATS ---------------- */
+function renderStats() {
+  const pool = byLevel(DATA);
+  let n = 0, l = 0, r = 0;
+  pool.forEach(d => {
+    const s = getCard(d.kanji).status;
+    if (s === 'new') n++; else if (s === 'learning') l++; else r++;
+  });
+  const today = new Date().toISOString().slice(0, 10);
+  const todayCount = state.history[today] || 0;
+  let streak = 0;
+  const d = new Date();
+  for (let i = 0; i < 365; i++) {
+    const key = d.toISOString().slice(0, 10);
+    if (state.history[key] > 0) { streak++; d.setDate(d.getDate() - 1); }
+    else if (i === 0) { d.setDate(d.getDate() - 1); }
+    else break;
+  }
+  const totalReviews = Object.values(state.history).reduce((a, b) => a + b, 0);
+  const studiedPct = ((pool.length - n) / pool.length * 100).toFixed(0);
+  const levelLabel = state.levelFilter === 'all' ? 'Все уровни' : state.levelFilter;
+
+  view.innerHTML = `
+    <h2>Прогресс · ${levelLabel}</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="n">${r + l}</div><div class="l">Изучено</div><div class="bar"><div class="fill" style="width:${studiedPct}%"></div></div></div>
+      <div class="stat"><div class="n">${todayCount}</div><div class="l">Повторено сегодня</div></div>
+      <div class="stat"><div class="n">${streak}</div><div class="l">Дней подряд</div></div>
+      <div class="stat"><div class="n">${totalReviews}</div><div class="l">Всего повторений</div></div>
+    </div>
+    <h2>По статусам</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="n" style="color:var(--accent)">${n}</div><div class="l">Новые</div></div>
+      <div class="stat"><div class="n" style="color:var(--warn)">${l}</div><div class="l">Учатся</div></div>
+      <div class="stat"><div class="n" style="color:var(--good)">${r}</div><div class="l">В повторе</div></div>
+      <div class="stat"><div class="n">${dueCards().length}</div><div class="l">К повтору</div></div>
+    </div>
+    <h2>По уровням (всего изучено)</h2>
+    <div class="card">
+      ${LEVELS.map(lv => {
+        const inLv = DATA.filter(d => d.level === lv);
+        const done = inLv.filter(d => getCard(d.kanji).status !== 'new').length;
+        const pct = inLv.length ? (done / inLv.length * 100).toFixed(0) : 0;
+        return `<div style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; font-size:13px;"><span>${lv}</span><span style="color:var(--muted)">${done} / ${inLv.length}</span></div>
+          <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('')}
+    </div>
+    <h2>Настройки</h2>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;">
+        <span class="label" style="text-transform:none; font-size:14px; color:var(--text);">Новых в день</span>
+        <span>
+          <button class="btn" style="padding:6px 12px;" onclick="changeNew(-5)">−5</button>
+          <span style="display:inline-block; width:36px; text-align:center;">${state.settings.newPerDay}</span>
+          <button class="btn" style="padding:6px 12px;" onclick="changeNew(5)">+5</button>
+        </span>
+      </div>
+    </div>
+    <h2>Данные</h2>
+    <div class="card">
+      <button class="btn" style="width:100%;" onclick="exportProgress()">📤 Экспорт прогресса (JSON)</button>
+      <button class="btn" style="width:100%; margin-top:8px;" onclick="document.getElementById('importFile').click()">📥 Импорт прогресса</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none;" onchange="importProgress(event)">
+      <button class="btn" style="width:100%; margin-top:8px; color:var(--bad); border-color:rgba(248,113,113,0.4);" onclick="resetAll()">🗑️ Сбросить всё</button>
+    </div>
+    <p style="color:var(--muted); font-size:11px; text-align:center; margin-top:20px;">
+      Данные хранятся только в этом браузере (localStorage).<br>Делай экспорт, чтобы не потерять прогресс.
+    </p>`;
+}
+function changeNew(d) { state.settings.newPerDay = Math.max(0, state.settings.newPerDay + d); save(); render(); }
+function resetAll() {
+  if (!confirm('Удалить весь прогресс? Это необратимо.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state.progress = {}; state.history = {};
+  state.studyQueue = []; state.studyIndex = 0; state.studyFlipped = false;
+  state.quiz = null;
+  render();
+}
+function exportProgress() {
+  const data = { progress: state.progress, settings: state.settings, levelFilter: state.levelFilter, history: state.history, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `kanji-progress-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url);
+  toast('Экспортировано');
+}
+function importProgress(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (!d.progress) throw new Error('no progress');
+      if (!confirm('Заменить текущий прогресс?')) return;
+      state.progress = d.progress;
+      state.settings = d.settings || state.settings;
+      state.levelFilter = d.levelFilter || 'all';
+      state.history = d.history || {};
+      save();
+      state.studyQueue = []; state.studyIndex = 0; state.studyFlipped = false;
+      render();
+      toast('Импортировано');
+    } catch (err) { alert('Не удалось прочитать файл: ' + err.message); }
+  };
+  reader.readAsText(file);
+}
+
+/* ---------------- UTILS ---------------- */
+function shuffle(a) {
+  const r = [...a];
+  for (let i = r.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
+}
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+/* ---------------- INIT ---------------- */
+document.querySelectorAll('nav button').forEach(b => {
+  b.addEventListener('click', () => {
+    state.tab = b.dataset.tab;
+    if (state.tab !== 'quiz') state.quiz = null;
+    render();
+  });
+});
+load();
+render();
+</script>
+</body>
+</html>
