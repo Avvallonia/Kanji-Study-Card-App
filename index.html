@@ -109,6 +109,8 @@ nav button.active { color: var(--accent); }
 .btn:active { transform: scale(0.98); }
 .btn-primary { background: var(--accent); color: #0b1020; border-color: var(--accent); font-weight: 600; }
 .btn-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+.btn-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.btn-row-2 .btn[disabled] { opacity: 0.4; cursor: default; }
 .btn-again { background: rgba(248,113,113,0.15); border-color: rgba(248,113,113,0.4); color: var(--bad); }
 .btn-hard  { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.4); color: var(--warn); }
 .btn-good  { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.4); color: var(--good); }
@@ -351,6 +353,7 @@ function setLevel(lv) {
   state.studyQueue = [];
   state.studyIndex = 0;
   state.studyFlipped = false;
+  sessionReviewed = new Set();
   state.quiz = null;
   save(); render();
 }
@@ -428,11 +431,9 @@ function renderStudy() {
           </div>` : ''}
       </div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-again" onclick="answer(0)"><div class="btn-stack">Снова<small>&lt;1м</small></div></button>
-      <button class="btn btn-hard"  onclick="answer(1)"><div class="btn-stack">Сложно<small>${nextIntervalLabel(d.kanji,1)}</small></div></button>
-      <button class="btn btn-good"  onclick="answer(2)"><div class="btn-stack">Норм<small>${nextIntervalLabel(d.kanji,2)}</small></div></button>
-      <button class="btn btn-easy"  onclick="answer(3)"><div class="btn-stack">Легко<small>${nextIntervalLabel(d.kanji,3)}</small></div></button>
+       <div class="btn-row-2">
+      <button class="btn" ${state.studyIndex === 0 ? 'disabled' : ''} onclick="prevCard()">← Предыдущий</button>
+      <button class="btn btn-primary" onclick="nextCard()">Следующий →</button>
     </div>
     <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:10px;">
       ${state.studyIndex + 1} / ${state.studyQueue.length}
@@ -452,19 +453,35 @@ function nextIntervalLabel(k, q) {
   return (interval / 365).toFixed(1) + 'г';
 }
 function flip() { state.studyFlipped = true; renderStudy(); }
-function answer(q) {
+
+// Отслеживаем, что уже оценили в этой сессии, чтобы не дублировать
+let sessionReviewed = new Set();
+
+function nextCard() {
   const d = state.studyQueue[state.studyIndex];
-  review(d.kanji, q);
-  if (q === 0) state.studyQueue.push(d);
+  if (!sessionReviewed.has(d.kanji)) {
+    // Автоматически помечаем как "Норм" при первом проходе
+    review(d.kanji, 2);
+    sessionReviewed.add(d.kanji);
+  }
   state.studyIndex++;
   state.studyFlipped = false;
   renderStudy();
   updateHeaderBadge();
 }
+
+function prevCard() {
+  if (state.studyIndex === 0) return;
+  state.studyIndex--;
+  state.studyFlipped = true; // возвращаемся к открытой карточке
+  renderStudy();
+}
+
 function rebuildStudy() {
   state.studyQueue = buildStudyQueue();
   state.studyIndex = 0;
   state.studyFlipped = false;
+  sessionReviewed = new Set();
   renderStudy();
 }
 
