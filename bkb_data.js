@@ -1930,3 +1930,1367 @@ const BKB = {
       "医院(い・いん) клиника"
     ]
   },
+  // ==================== BASIC KANJI BOOK VOL. 2 ====================
+  // ===== Урок 23 (Hobbies) =====
+  "映": { m: "отражать; показывать", ex: [
+    "映(うつ)る to be reflected",
+    "映(うつ)す to reflect",
+    "映画(えい・が) a movie"
+  ]},
+  "写": { m: "копировать; фотографировать", ex: [
+    "写(うつ)す to copy",
+    "写真(しゃ・しん) a photograph",
+    "写真家(しゃ・しん・か) a photographer"
+  ]},
+  "真": { m: "правда; истинный", ex: [
+    "真(ま)っ白(しろ) real white",
+    "真夜中(ま・よ・なか) midnight",
+    "真理(しん・り) truth",
+    "真剣(しん・けん)な serious"
+  ]},
+  "音": { m: "звук", ex: [
+    "音(おと) sound, noise",
+    "発音(はつ・おん) pronunciation",
+    "音読(おん・どく) reading aloud"
+  ]},
+  "楽": { m: "музыка; удовольствие", ex: [
+    "楽(たの)しい enjoyable",
+    "楽(たの)しむ to enjoy",
+    "音楽(おん・がく) music",
+    "楽(らく)な easy, comfortable"
+  ]},
+  "料": { m: "материал; плата", ex: [
+    "料理(りょう・り) cooking",
+    "料金(りょう・きん) a fee, a charge",
+    "材料(ざい・りょう) ingredients",
+    "原料(げん・りょう) raw material"
+  ]},
+  "組": { m: "объединять; группа", ex: [
+    "組(く)む to assemble",
+    "組(く)み a group, a set",
+    "番組(ばん・ぐみ) a TV program",
+    "組織(そ・しき) organization"
+  ]},
+  "思": { m: "думать", ex: [
+    "思(おも)う to think",
+    "思(おも)い出(だ)す to recall",
+    "思(おも)い出(で) a memory",
+    "思考力(し・こう・りょく) thinking power"
+  ]},
+  "色": { m: "цвет", ex: [
+    "色(いろ) color",
+    "水色(みず・いろ) light blue",
+    "原色(げん・しょく) primary colors",
+    "特色(とく・しょく) a characteristic"
+  ]},
+  "白": { m: "белый", ex: [
+    "白(しろ) white color",
+    "白(しろ)い white",
+    "白鳥(はく・ちょう) a swan",
+    "白紙(はく・し) blank paper"
+  ]},
+  "黒": { m: "чёрный", ex: [
+    "黒(くろ) black color",
+    "黒(くろ)い black",
+    "黒字(くろ・じ) a profit, surplus",
+    "黒板(こく・ばん) a blackboard"
+  ]},
+  "赤": { m: "красный", ex: [
+    "赤(あか)い red",
+    "赤(あか)ちゃん a baby",
+    "赤字(あか・じ) a deficit",
+    "赤道(せき・どう) the equator"
+  ]},
+
+  // ===== Урок 24 (Verbs — Opposite Actions) =====
+  "起": { m: "вставать; происходить", ex: [
+    "起(お)きる to get up, to rise",
+    "起(お)こす to cause, to wake someone up",
+    "起(お)こる to happen"
+  ]},
+  "寝": { m: "спать", ex: [
+    "寝(ね)る to sleep",
+    "寝(ね)かす to put (a child) to sleep",
+    "寝室(しん・しつ) a bedroom"
+  ]},
+  "遊": { m: "играть; гулять", ex: [
+    "遊(あそ)ぶ to play",
+    "遊(あそ)び play, recreation"
+  ]},
+  "立": { m: "стоять; основывать", ex: [
+    "立(た)つ to stand",
+    "立(た)てる to set up",
+    "立場(たち・ば) a standpoint",
+    "国立(こく・りつ) national",
+    "私立(し・りつ) private"
+  ]},
+  "座": { m: "сидеть; место", ex: [
+    "座(すわ)る to sit",
+    "正座(せい・ざ) to sit up straight",
+    "座席(ざ・せき) a seat"
+  ]},
+  "使": { m: "использовать", ex: [
+    "使(つか)う to use, to employ",
+    "使(つか)い方(かた) way of using",
+    "使用(し・よう) to use",
+    "大使(たい・し) an ambassador"
+  ]},
+  "始": { m: "начинать", ex: [
+    "始(はじ)まる to start",
+    "始(はじ)める to start something",
+    "開始(かい・し) to begin",
+    "始発(し・はつ) the first train"
+  ]},
+  "終": { m: "заканчивать", ex: [
+    "終(お)わる to end",
+    "終(お)える to finish something",
+    "終電(しゅう・でん) the last train",
+    "終点(しゅう・てん) the terminus"
+  ]},
+  "貸": { m: "одалживать (давать в долг)", ex: [
+    "貸(か)す to lend, to rent",
+    "貸(か)し出(だ)し loaning out",
+    "賃貸(ちん・たい) a rental"
+  ]},
+  "借": { m: "брать в долг", ex: [
+    "借(か)りる to borrow",
+    "借金(しゃっ・きん) a debt",
+    "借用書(しゃく・よう・しょ) an IOU"
+  ]},
+  "返": { m: "возвращать", ex: [
+    "返(かえ)す to return",
+    "返事(へん・じ) an answer",
+    "返信(へん・しん) to reply",
+    "返済(へん・さい) to return, to pay back"
+  ]},
+  "送": { m: "отправлять; провожать", ex: [
+    "送(おく)る to send",
+    "送別会(そう・べつ・かい) a farewell party",
+    "見送(み・おく)る to see someone off",
+    "送料(そう・りょう) postage"
+  ]},
+
+  // ===== Урок 25 (Wedding Ceremonies) =====
+  "結": { m: "связывать; завершать", ex: [
+    "結(むす)ぶ to bind, to connect",
+    "結婚(けっ・こん) marriage",
+    "結論(けつ・ろん) a conclusion",
+    "結果(けっ・か) a result"
+  ]},
+  "婚": { m: "свадьба", ex: [
+    "結婚(けっ・こん) to get married",
+    "婚約(こん・やく) to get engaged",
+    "新婚旅行(しん・こん・りょ・こう) a honeymoon"
+  ]},
+  "離": { m: "отделять; разводиться", ex: [
+    "離(はな)れる to separate",
+    "離(はな)す to part, to detach",
+    "離婚(り・こん) to divorce",
+    "別離(べつ・り) separation"
+  ]},
+  "席": { m: "место (сиденье)", ex: [
+    "席(せき) a seat",
+    "出席(しゅっ・せき) to attend",
+    "指定席(し・てい・せき) a reserved seat",
+    "座席(ざ・せき) a seat"
+  ]},
+  "欠": { m: "отсутствовать; не хватать", ex: [
+    "欠(か)ける to be missing",
+    "欠点(けっ・てん) a fault",
+    "欠席(けっ・せき) to be absent"
+  ]},
+  "予": { m: "заранее; предварительный", ex: [
+    "予定(よ・てい) a schedule, a plan",
+    "予約(よ・やく) to reserve",
+    "天気予報(てん・き・よ・ほう) a weather forecast"
+  ]},
+  "定": { m: "определять; фиксировать", ex: [
+    "定(さだ)める to decide",
+    "定食(てい・しょく) a set meal",
+    "定員(てい・いん) an admission limit",
+    "定期(てい・き) a commuter's pass"
+  ]},
+  "洋": { m: "океан; западный", ex: [
+    "西洋(せい・よう) the West",
+    "東洋(とう・よう) the East",
+    "洋服(よう・ふく) Western clothes",
+    "洋食(よう・しょく) Western food"
+  ]},
+  "式": { m: "церемония; формула; стиль", ex: [
+    "式(しき) a ceremony, a formula",
+    "結婚式(けっ・こん・しき) a wedding",
+    "公式(こう・しき) a formula",
+    "正式(せい・しき)な formal, official"
+  ]},
+  "和": { m: "мир; японский", ex: [
+    "平和(へい・わ) peace",
+    "和食(わ・しょく) Japanese food",
+    "和服(わ・ふく) Japanese kimono"
+  ]},
+  "活": { m: "живой; активный", ex: [
+    "生活(せい・かつ) life, living",
+    "活発(かっ・ぱつ)な active",
+    "活動(かつ・どう) activity"
+  ]},
+
+  // ===== Урок 26 (Four Seasons) =====
+  "春": { m: "весна", ex: [
+    "春(はる) spring",
+    "春分(しゅん・ぶん)の日(ひ) the vernal equinox day",
+    "春休(はる・やす)み spring holidays",
+    "青春(せい・しゅん) youth"
+  ]},
+  "夏": { m: "лето", ex: [
+    "夏(なつ) summer",
+    "夏休(なつ・やす)み summer holidays",
+    "冷夏(れい・か) a cool summer"
+  ]},
+  "秋": { m: "осень", ex: [
+    "秋(あき) autumn",
+    "秋分(しゅう・ぶん)の日(ひ) the autumnal equinox day",
+    "晩秋(ばん・しゅう) late autumn"
+  ]},
+  "冬": { m: "зима", ex: [
+    "冬(ふゆ) winter",
+    "冬休(ふゆ・やす)み winter holidays",
+    "暖冬(だん・とう) a mild winter"
+  ]},
+  "暑": { m: "жаркий (о климате)", ex: [
+    "暑(あつ)い hot",
+    "暑(あつ)さ heat, hotness",
+    "暑中見舞(しょ・ちゅう・み・ま)い a summer greeting card"
+  ]},
+  "熱": { m: "жаркий; жар", ex: [
+    "熱(あつ)い hot",
+    "熱(ねつ) fever, heat",
+    "熱心(ねっ・しん)な eager, enthusiastic"
+  ]},
+  "寒": { m: "холодный (о климате)", ex: [
+    "寒(さむ)い cold",
+    "寒(さむ)さ coldness",
+    "寒冷前線(かん・れい・ぜん・せん) a cold front"
+  ]},
+  "冷": { m: "холодный (о предметах)", ex: [
+    "冷(ひ)える to cool",
+    "冷(ひ)やす to cool",
+    "冷(つめ)たい cold"
+  ]},
+  "暖": { m: "тёплый", ex: [
+    "暖(あたた)かい warm",
+    "暖冬(だん・とう) a mild winter"
+  ]},
+  "温": { m: "тёплый; температура", ex: [
+    "温(あたた)かい warm",
+    "温度(おん・ど) temperature"
+  ]},
+  "涼": { m: "прохладный", ex: [
+    "涼(すず)しい cool"
+  ]},
+  "天": { m: "небо; погода", ex: [
+    "天(あま)の川(がわ) the Milky Way",
+    "天気(てん・き) the weather",
+    "天国(てん・ごく) heaven, paradise"
+  ]},
+
+  // ===== Урок 27 (Jobs) =====
+  "仕": { m: "служить; делать", ex: [
+    "仕事(し・ごと) a job, work",
+    "仕方(し・かた) how to, a method"
+  ]},
+  "事": { m: "дело; факт", ex: [
+    "事(こと) a matter, an affair",
+    "事故(じ・こ) an accident"
+  ]},
+  "者": { m: "человек (профессия)", ex: [
+    "者(もの) a person",
+    "医者(い・しゃ) a doctor",
+    "科学者(か・がく・しゃ) a scientist",
+    "学者(がく・しゃ) a scholar"
+  ]},
+  "運": { m: "нести; судьба", ex: [
+    "運(はこ)ぶ to carry",
+    "運動(うん・どう) exercise, sports",
+    "運(うん) luck, fortune",
+    "運送(うん・そう) conveyance"
+  ]},
+  "転": { m: "катить(ся)", ex: [
+    "転(ころ)ぶ to fall down",
+    "運転(うん・てん) to drive",
+    "自転車(じ・てん・しゃ) a bicycle",
+    "回転(かい・てん) to rotate"
+  ]},
+  "選": { m: "выбирать", ex: [
+    "選(えら)ぶ to select, to choose",
+    "選手(せん・しゅ) a player",
+    "選挙(せん・きょ) an election"
+  ]},
+  "記": { m: "записывать", ex: [
+    "記事(き・じ) an article",
+    "日記(にっ・き) a diary",
+    "記入(き・にゅう) to fill in",
+    "記者(き・しゃ) a reporter"
+  ]},
+  "議": { m: "обсуждать", ex: [
+    "会議(かい・ぎ) a conference",
+    "議長(ぎ・ちょう) a chairman",
+    "議会(ぎ・かい) Parliament",
+    "議論(ぎ・ろん) to discuss"
+  ]},
+  "員": { m: "член; сотрудник", ex: [
+    "会員(かい・いん) a member of an association",
+    "定員(てい・いん) an admission limit",
+    "店員(てん・いん) a sales person"
+  ]},
+  "商": { m: "торговля", ex: [
+    "商店(しょう・てん) a store",
+    "商品(しょう・ひん) goods",
+    "商売(しょう・ばい) trade",
+    "商社(しょう・しゃ) a trading company"
+  ]},
+  "業": { m: "дело; работа; отрасль", ex: [
+    "工業(こう・ぎょう) manufacture",
+    "商業(しょう・ぎょう) commerce",
+    "農業(のう・ぎょう) agriculture",
+    "産業(さん・ぎょう) industry"
+  ]},
+  "農": { m: "земледелие", ex: [
+    "農村(のう・そん) a farm village",
+    "農家(のう・か) a farm house",
+    "農民(のう・みん) a farmer",
+    "農業(のう・ぎょう) agriculture"
+  ]},
+
+  // ===== Урок 28 (Test Questions) =====
+  "良": { m: "хороший", ex: [
+    "良(よ)い good",
+    "最良(さい・りょう) the best",
+    "良心(りょう・しん) conscience"
+  ]},
+  "悪": { m: "плохой", ex: [
+    "悪(わる)い bad",
+    "悪化(あっ・か) to change for the worse",
+    "悪口(わる・くち) speaking ill of",
+    "悪性(あく・せい)の malignant"
+  ]},
+  "点": { m: "точка; балл", ex: [
+    "点(てん) a point",
+    "点数(てん・すう) the number of points",
+    "欠点(けっ・てん) a fault",
+    "終点(しゅう・てん) a terminus"
+  ]},
+  "正": { m: "правильный", ex: [
+    "正(ただ)しい correct, right",
+    "正答(せい・とう) a correct answer",
+    "正月(しょう・がつ) the New Year",
+    "正直(しょう・じき)な honest"
+  ]},
+  "違": { m: "отличаться; ошибаться", ex: [
+    "違(ちが)う to be different",
+    "違(ちが)い a difference",
+    "間違(ま・ちが)い a mistake",
+    "違反(い・はん) violation"
+  ]},
+  "同": { m: "тот же самый", ex: [
+    "同(おな)じ same",
+    "同時(どう・じ)に at the same time",
+    "同情(どう・じょう) to sympathize",
+    "同意(どう・い) to agree"
+  ]},
+  "適": { m: "подходящий", ex: [
+    "適(てき)した suitable",
+    "適当(てき・とう)な proper",
+    "適応(てき・おう) to adapt",
+    "適切(てき・せつ)な appropriate"
+  ]},
+  "当": { m: "попадать; соответствовать", ex: [
+    "当(あ)たる to hit",
+    "当(あ)てる to apply",
+    "本当(ほん・とう) truth",
+    "手当(て・あ)て medical treatment",
+    "当番(とう・ばん) duty, one's turn"
+  ]},
+  "難": { m: "трудный", ex: [
+    "難(むずか)しい difficult",
+    "住宅難(じゅう・たく・なん) housing shortage",
+    "難問(なん・もん) a difficult problem",
+    "困難(こん・なん)な difficult"
+  ]},
+  "次": { m: "следующий", ex: [
+    "次(つ)ぐ to be next",
+    "次(つぎ) next",
+    "目次(もく・じ) a table of contents",
+    "次回(じ・かい) next time"
+  ]},
+  "形": { m: "форма", ex: [
+    "形(かたち) a shape",
+    "人形(にん・ぎょう) a doll",
+    "形式(けい・しき) a form",
+    "活用形(かつ・よう・けい) conjugation forms"
+  ]},
+  "味": { m: "вкус", ex: [
+    "味(あじ) taste",
+    "味(あじ)わう to enjoy the taste",
+    "意味(い・み) meaning",
+    "趣味(しゅ・み) a hobby"
+  ]},
+
+  // ===== Урок 29 (Exam) =====
+  "試": { m: "пробовать; экзамен", ex: [
+    "試(ため)す to try",
+    "試験(し・けん) an examination",
+    "試合(し・あい) a game"
+  ]},
+  "験": { m: "проверка; опыт", ex: [
+    "試験(し・けん) an examination",
+    "実験(じっ・けん) an experiment",
+    "経験(けい・けん) experience"
+  ]},
+  "面": { m: "лицо; поверхность", ex: [
+    "面接(めん・せつ) an interview",
+    "面白(おも・しろ)い interesting",
+    "方面(ほう・めん) direction"
+  ]},
+  "接": { m: "соединять; касаться", ex: [
+    "接(つ)ぐ to connect",
+    "直接(ちょく・せつ) direct",
+    "面接(めん・せつ) an interview"
+  ]},
+  "説": { m: "объяснять", ex: [
+    "説明(せつ・めい) to explain",
+    "小説(しょう・せつ) a novel",
+    "説教(せっ・きょう) to preach",
+    "伝説(でん・せつ) a legend"
+  ]},
+  "果": { m: "плод; результат", ex: [
+    "結果(けっ・か) a result",
+    "効果(こう・か) an effect",
+    "果物(くだ・もの) fruit",
+    "成果(せい・か) an outcome"
+  ]},
+  "合": { m: "подходить; соединять", ex: [
+    "合(あ)う to suit",
+    "合(あ)わせる to combine",
+    "試合(し・あい) a game",
+    "合宿(がっ・しゅく) a training camp",
+    "合計(ごう・けい) a total"
+  ]},
+  "格": { m: "разряд; ранг", ex: [
+    "合格(ごう・かく) to pass",
+    "資格(し・かく) a qualification"
+  ]},
+  "受": { m: "получать; сдавать", ex: [
+    "受(う)ける to receive",
+    "受験(じゅ・けん) to take an exam",
+    "受付(うけ・つけ) reception",
+    "受話器(じゅ・わ・き) a telephone receiver"
+  ]},
+  "落": { m: "падать; проваливаться", ex: [
+    "落(お)ちる to fall",
+    "落(お)とす to drop",
+    "落第(らく・だい) to fail (in an exam)",
+    "落下(らっ・か) to fall, to drop"
+  ]},
+  "残": { m: "оставаться", ex: [
+    "残(のこ)る to remain",
+    "残(のこ)す to leave",
+    "残高(ざん・だか) balance",
+    "残業(ざん・ぎょう) overtime work"
+  ]},
+  "念": { m: "чувство; желание", ex: [
+    "記念(き・ねん) memory, a memento",
+    "残念(ざん・ねん)な regrettable"
+  ]},
+
+  // ===== Урок 30 (Radicals — Hand & Water) =====
+  "指": { m: "палец; указывать", ex: [
+    "指(ゆび) a finger",
+    "指(さ)す to point at",
+    "親指(おや・ゆび) a thumb",
+    "指定席(し・てい・せき) a reserved seat"
+  ]},
+  "折": { m: "складывать; ломать", ex: [
+    "折(お)る to fold, to break",
+    "折(お)り紙(がみ) paper folding",
+    "右折(う・せつ) right turn",
+    "左折(さ・せつ) left turn"
+  ]},
+  "払": { m: "платить", ex: [
+    "払(はら)う to pay",
+    "支払(し・はら)い payment",
+    "前払(まえ・ばら)い payment in advance"
+  ]},
+  "投": { m: "бросать", ex: [
+    "投(な)げる to throw",
+    "投資(とう・し) investment",
+    "投手(とう・しゅ) a pitcher"
+  ]},
+  "打": { m: "бить; ударять", ex: [
+    "打(う)つ to hit",
+    "打者(だ・しゃ) a batter"
+  ]},
+  "深": { m: "глубокий", ex: [
+    "深(ふか)い deep",
+    "深夜(しん・や) midnight"
+  ]},
+  "洗": { m: "мыть", ex: [
+    "洗(あら)う to wash",
+    "洗面(せん・めん) washroom"
+  ]},
+  "流": { m: "течь; поток", ex: [
+    "流(なが)れる to stream",
+    "流(なが)す to pour",
+    "流行(りゅう・こう) fashion"
+  ]},
+  "消": { m: "гасить; исчезать", ex: [
+    "消(け)す to turn off",
+    "消(き)える to go out",
+    "消火(しょう・か) fire extinguishing"
+  ]},
+  "決": { m: "решать", ex: [
+    "決(き)める to decide",
+    "決(き)まる to be decided",
+    "決定(けっ・てい) decision"
+  ]},
+
+  // ===== Урок 31 (Travel) =====
+  "旅": { m: "путешествие", ex: [
+    "旅(たび) a trip",
+    "旅行(りょ・こう) to travel",
+    "旅費(りょ・ひ) traveling expenses",
+    "旅館(りょ・かん) an inn"
+  ]},
+  "約": { m: "обещание; примерно", ex: [
+    "約束(やく・そく) to promise",
+    "予約(よ・やく) to reserve",
+    "約(やく) about",
+    "婚約(こん・やく) an engagement"
+  ]},
+  "案": { m: "план; идея", ex: [
+    "案(あん) an idea, a proposal",
+    "案内(あん・ない) to guide",
+    "名案(めい・あん) a good idea",
+    "提案(てい・あん) to propose"
+  ]},
+  "準": { m: "уровень; стандарт", ex: [
+    "準備(じゅん・び) to prepare",
+    "水準(すい・じゅん) a standard",
+    "準急(じゅん・きゅう) a local express"
+  ]},
+  "備": { m: "готовить; снабжать", ex: [
+    "設備(せつ・び) equipment",
+    "準備(じゅん・び) preparation",
+    "予備(よ・び) a spare"
+  ]},
+  "相": { m: "взаимный; лицом к лицу", ex: [
+    "相手(あい・て) an opponent, a partner",
+    "相談(そう・だん) to consult",
+    "首相(しゅ・しょう) a Prime Minister"
+  ]},
+  "談": { m: "разговор", ex: [
+    "対談(たい・だん) a face to face talk",
+    "会談(かい・だん) to hold a conference",
+    "談話室(だん・わ・しつ) a lounge"
+  ]},
+  "連": { m: "соединять; вести", ex: [
+    "連(つ)れる to bring (someone)",
+    "連絡(れん・らく) to contact",
+    "国連(こく・れん) the United Nations",
+    "連日(れん・じつ) day after day"
+  ]},
+  "絡": { m: "связывать", ex: [
+    "連絡(れん・らく) to contact, to inform"
+  ]},
+  "泊": { m: "ночевать", ex: [
+    "泊(と)まる to stay the night",
+    "宿泊(しゅく・はく) to stay the night",
+    "三泊(さん・ぱく) three nights stay"
+  ]},
+  "特": { m: "особый", ex: [
+    "特(とく)に specially",
+    "特別(とく・べつ)な special",
+    "特急(とっ・きゅう) a special express",
+    "特色(とく・しょく) a characteristic"
+  ]},
+  "急": { m: "спешить; срочный", ex: [
+    "急(いそ)ぐ to hurry",
+    "急(きゅう)に suddenly",
+    "急用(きゅう・よう) urgent business",
+    "急行(きゅう・こう) an express train"
+  ]},
+
+  // ===== Урок 32 (Means of Transportation) =====
+  "線": { m: "линия", ex: [
+    "線(せん) a line",
+    "山手線(やま・の・て・せん) Yamanote Line",
+    "直線(ちょく・せん) a straight line"
+  ]},
+  "発": { m: "начинать; отправлять", ex: [
+    "発(た)つ to start",
+    "出発(しゅっ・ぱつ) departure",
+    "発車(はっ・しゃ) departure (of a train)"
+  ]},
+  "到": { m: "достигать", ex: [
+    "到着(とう・ちゃく) arrival"
+  ]},
+  "交": { m: "пересекать; смешивать", ex: [
+    "交(ま)じる to mix",
+    "交(ま)じわる to cross, to associate",
+    "交通(こう・つう) traffic",
+    "外交(がい・こう) diplomacy"
+  ]},
+  "機": { m: "машина; случай", ex: [
+    "機械(き・かい) a machine",
+    "機能(き・のう) function",
+    "ジェット機(き) a jet airplane",
+    "機会(き・かい) an opportunity, a chance"
+  ]},
+  "関": { m: "барьер; связь", ex: [
+    "関係(かん・けい) to relate",
+    "機関(き・かん) an engine, an organ",
+    "関東地方(かん・とう・ち・ほう) the Kanto District"
+  ]},
+  "局": { m: "бюро; станция", ex: [
+    "テレビ局(きょく) a TV station",
+    "電話局(でん・わ・きょく) a telephone office",
+    "放送局(ほう・そう・きょく) a broadcasting station"
+  ]},
+  "信": { m: "верить; сообщение", ex: [
+    "信(しん)じる to believe",
+    "自信(じ・しん) self-confidence",
+    "信号(しん・ごう) a signal"
+  ]},
+  "路": { m: "дорога", ex: [
+    "道路(どう・ろ) a road",
+    "線路(せん・ろ) a railroad track"
+  ]},
+  "故": { m: "старый; случай", ex: [
+    "事故(じ・こ) an accident"
+  ]},
+  "注": { m: "лить; обращать внимание", ex: [
+    "注意(ちゅう・い) to be careful",
+    "注文(ちゅう・もん) to order",
+    "注射(ちゅう・しゃ) injection"
+  ]},
+  "意": { m: "намерение; смысл", ex: [
+    "意味(い・み) meaning",
+    "意見(い・けん) an opinion",
+    "注意(ちゅう・い) attention"
+  ]},
+
+  // ===== Урок 33 (Signs) =====
+  "押": { m: "толкать; нажимать", ex: [
+    "押(お)す to push",
+    "押入(おし・い)れ a closet"
+  ]},
+  "引": { m: "тянуть", ex: [
+    "引(ひ)く to pull, to draw",
+    "引(ひ)き出(だ)し a drawer",
+    "引力(いん・りょく) gravitational force",
+    "引用(いん・よう) to quote, to cite"
+  ]},
+  "割": { m: "делить; резать", ex: [
+    "割(わ)る to cut, to break",
+    "割合(わり・あい) rate, a ratio",
+    "一割引(いち・わり・びき) 10% off",
+    "分割(ぶん・かつ) division"
+  ]},
+  "営": { m: "вести (бизнес)", ex: [
+    "営業(えい・ぎょう) to carry on business",
+    "経営(けい・えい) to run an enterprise",
+    "運営(うん・えい) to manage"
+  ]},
+  "自": { m: "сам; себя", ex: [
+    "自宅(じ・たく) one's own home",
+    "自分(じ・ぶん) one's own",
+    "自信(じ・しん) self-confidence",
+    "自由(じ・ゆう) freedom, liberty"
+  ]},
+  "由": { m: "причина; путь", ex: [
+    "経由(けい・ゆ) via, by way of",
+    "理由(り・ゆう) reason"
+  ]},
+  "取": { m: "брать; получать", ex: [
+    "取(と)る to get, to take",
+    "取引(とり・ひき) transaction, trade",
+    "取材(しゅ・ざい) to collect materials",
+    "取得(しゅ・とく) to acquire"
+  ]},
+  "求": { m: "требовать; искать", ex: [
+    "求(もと)める to ask for",
+    "要求(よう・きゅう) to demand",
+    "求人広告(きゅう・じん・こう・こく) a help wanted advertisement"
+  ]},
+  "願": { m: "просить; желать", ex: [
+    "願(ねが)う to request",
+    "願書(がん・しょ) an application",
+    "願(ねが)い a wish"
+  ]},
+  "知": { m: "знать", ex: [
+    "知(し)る to know",
+    "知(し)らせる to let know, to inform",
+    "知識(ち・しき) knowledge",
+    "通知(つう・ち) to inform"
+  ]},
+
+  // ===== Урок 34 (General Terms for Tools) =====
+  "台": { m: "подставка; основание", ex: [
+    "台所(だい・どころ) a kitchen",
+    "台風(たい・ふう) a typhoon"
+  ]},
+  "窓": { m: "окно", ex: [
+    "窓(まど) a window",
+    "窓口(まど・ぐち) a window"
+  ]},
+  "具": { m: "инструмент; ингредиент", ex: [
+    "道具(どう・ぐ) a tool",
+    "家具(か・ぐ) furniture",
+    "寝具(しん・ぐ) bedding",
+    "文具(ぶん・ぐ) stationery"
+  ]},
+  "器": { m: "сосуд; инструмент", ex: [
+    "器(うつわ) a container",
+    "食器(しょっ・き) tableware",
+    "楽器(がっ・き) a musical instrument",
+    "器具(き・ぐ) a utensil"
+  ]},
+  "用": { m: "использовать; дело", ex: [
+    "用(もち)いる to use",
+    "用事(よう・じ) an errand, business",
+    "用意(よう・い) to prepare",
+    "用具(よう・ぐ) a tool",
+    "利用(り・よう) to use"
+  ]},
+  "服": { m: "одежда; подчиняться", ex: [
+    "服(ふく) clothes",
+    "和服(わ・ふく) Japanese clothes",
+    "洋服(よう・ふく) Western clothes",
+    "服用(ふく・よう) to take (medicine)"
+  ]},
+  "紙": { m: "бумага", ex: [
+    "紙(かみ) paper",
+    "手紙(て・がみ) a letter",
+    "折(お)り紙(がみ) paper for folding",
+    "表紙(ひょう・し) a cover"
+  ]},
+  "辞": { m: "термин; уходить", ex: [
+    "辞書(じ・しょ) a dictionary",
+    "辞(じ)める to resign"
+  ]},
+  "雑": { m: "разный; смешанный", ex: [
+    "雑誌(ざっ・し) a magazine",
+    "雑音(ざつ・おん) noises"
+  ]},
+  "誌": { m: "журнал", ex: [
+    "雑誌(ざっ・し) a magazine",
+    "週刊誌(しゅう・かん・し) a weekly magazine"
+  ]},
+
+  // ===== Урок 35 (Economic Terminology) =====
+  "銀": { m: "серебро", ex: [
+    "銀(ぎん) silver",
+    "銀行(ぎん・こう) a bank"
+  ]},
+  "資": { m: "капитал; ресурсы", ex: [
+    "資本(し・ほん) capital, a fund",
+    "資料(し・りょう) data, materials",
+    "資金(し・きん) funds"
+  ]},
+  "品": { m: "товар; вещь", ex: [
+    "品物(しな・もの) goods, articles",
+    "食料品(しょく・りょう・ひん) food",
+    "商品(しょう・ひん) goods, commodities"
+  ]},
+  "個": { m: "индивидуальный", ex: [
+    "個人(こ・じん) an individual",
+    "一個(いっ・こ) one (thing)",
+    "個室(こ・しつ) a private room"
+  ]},
+  "価": { m: "цена; ценность", ex: [
+    "物価(ぶっ・か) commodity prices",
+    "評価(ひょう・か) to evaluate",
+    "高価(こう・か)な expensive",
+    "価格(か・かく) a price"
+  ]},
+  "産": { m: "производить; рожать", ex: [
+    "産(う)む to give birth",
+    "生産(せい・さん) to produce",
+    "産業(さん・ぎょう) industry",
+    "産地(さん・ち) producing area"
+  ]},
+  "期": { m: "период; срок", ex: [
+    "期間(き・かん) a period",
+    "学期(がっ・き) a school term",
+    "期待(き・たい) to expect",
+    "定期(てい・き) a commuter's pass"
+  ]},
+  "々": { m: "знак повтора", ex: [
+    "人々(ひと・びと) people",
+    "国々(くに・ぐに) various countries",
+    "色々(いろ・いろ)な various",
+    "少々(しょう・しょう) a little, a few"
+  ]},
+  "報": { m: "сообщать; вознаграждение", ex: [
+    "報道(ほう・どう) news",
+    "電報(でん・ぽう) a telegram",
+    "予報(よ・ほう) a forecast",
+    "情報(じょう・ほう) information"
+  ]},
+  "告": { m: "объявлять", ex: [
+    "報告(ほう・こく) to report",
+    "広告(こう・こく) an advertisement",
+    "報告書(ほう・こく・しょ) a report"
+  ]},
+
+  // ===== Урок 36 (Feelings) =====
+  "心": { m: "сердце; душа", ex: [
+    "心(こころ) a heart, mind",
+    "心配(しん・ぱい) to worry",
+    "心理学(しん・り・がく) psychology",
+    "関心(かん・しん) interest"
+  ]},
+  "感": { m: "чувствовать", ex: [
+    "感(かん)じる to feel",
+    "感覚(かん・かく) a sense",
+    "感心(かん・しん) to be impressed",
+    "感謝(かん・しゃ) to thank"
+  ]},
+  "情": { m: "чувство; обстоятельства", ex: [
+    "感情(かん・じょう) a feeling",
+    "情報(じょう・ほう) information",
+    "愛情(あい・じょう) love, affection"
+  ]},
+  "悲": { m: "грустный", ex: [
+    "悲(かな)しい sad",
+    "悲(かな)しむ to be sad",
+    "悲劇(ひ・げき) a tragedy"
+  ]},
+  "泣": { m: "плакать", ex: [
+    "泣(な)く to cry, to weep"
+  ]},
+  "笑": { m: "смеяться", ex: [
+    "笑(わら)う to laugh, to smile",
+    "笑顔(え・がお) a smiling face"
+  ]},
+  "頭": { m: "голова", ex: [
+    "頭(あたま) a head",
+    "頭金(あたま・きん) down payment",
+    "頭痛(ず・つう) a headache",
+    "頭部(とう・ぶ) the head"
+  ]},
+  "覚": { m: "запоминать; пробуждаться", ex: [
+    "覚(おぼ)える to memorize",
+    "目覚(め・ざ)まし時計(と・けい) an alarm clock",
+    "感覚(かん・かく) a sense",
+    "知覚(ち・かく) perception"
+  ]},
+  "忘": { m: "забывать", ex: [
+    "忘(わす)れる to forget",
+    "忘年会(ぼう・ねん・かい) a year-end party",
+    "忘(わす)れ物(もの) a thing left behind"
+  ]},
+  "考": { m: "думать; размышлять", ex: [
+    "考(かんが)える to think",
+    "考(かんが)え a thought, an idea",
+    "考古学(こう・こ・がく) archaeology",
+    "選考(せん・こう) to select"
+  ]},
+
+  // ===== Урок 37 (Verbs 5) =====
+  "伝": { m: "передавать; легенда", ex: [
+    "伝(つた)える to transmit",
+    "手伝(て・つだ)う to help, to assist",
+    "伝記(でん・き) a biography",
+    "伝言(でん・ごん) a message"
+  ]},
+  "代": { m: "заменять; период; плата", ex: [
+    "代(か)わる to substitute",
+    "代(か)える to change",
+    "時代(じ・だい) an era",
+    "部屋代(へ・や・だい) room rent",
+    "交代(こう・たい) to take turns"
+  ]},
+  "呼": { m: "звать; дышать", ex: [
+    "呼(よ)ぶ to call",
+    "呼出(よび・だ)し calling",
+    "呼吸(こ・きゅう) a breath"
+  ]},
+  "焼": { m: "жечь; печь", ex: [
+    "焼(や)く to burn, to roast",
+    "焼(や)ける to be burned",
+    "焼(や)き肉(にく) grilled meat",
+    "日焼(ひ・や)け sunburn",
+    "全焼(ぜん・しょう) to be burned down"
+  ]},
+  "曲": { m: "гнуть(ся); мелодия", ex: [
+    "曲(ま)がる to curve",
+    "曲(ま)げる to bend",
+    "曲線(きょく・せん) a curved line",
+    "作曲家(さっ・きょく・か) a composer"
+  ]},
+  "脱": { m: "снимать; убегать", ex: [
+    "脱(ぬ)ぐ to undress, to take off",
+    "脱出(だっ・しゅつ) to escape",
+    "脱落(だつ・らく) to drop out"
+  ]},
+  "別": { m: "отдельный; расставаться", ex: [
+    "別(わか)れる to part from",
+    "別(べつ)の different, another",
+    "特別(とく・べつ)な special",
+    "区別(く・べつ) distinction"
+  ]},
+  "集": { m: "собирать(ся)", ex: [
+    "集(あつ)める to collect",
+    "集(あつ)まる to gather",
+    "集合(しゅう・ごう) to gather",
+    "集中(しゅう・ちゅう) to concentrate"
+  ]},
+  "並": { m: "выстраивать(ся)", ex: [
+    "並(なら)ぶ to line up",
+    "並(なら)べる to line up",
+    "並(なみ)の ordinary",
+    "並木(なみ・き) a tree-lined road",
+    "並列(へい・れつ) parallel"
+  ]},
+  "喜": { m: "радость", ex: [
+    "喜(よろこ)ぶ to be glad",
+    "喜(よろこ)び pleasure",
+    "喜劇(き・げき) a comedy"
+  ]},
+  "驚": { m: "удивляться", ex: [
+    "驚(おどろ)く to be surprised",
+    "驚(おどろ)き surprise",
+    "驚異(きょう・い) a wonder"
+  ]},
+
+  // ===== Урок 38 (Adjectives 3) =====
+  "細": { m: "тонкий; мелкий", ex: [
+    "細(ほそ)い slender",
+    "細(こま)かい small, detailed",
+    "細部(さい・ぶ) details",
+    "細分化(さい・ぶん・か) to subdivide"
+  ]},
+  "太": { m: "толстый", ex: [
+    "太(ふと)い fat, thick",
+    "太(ふと)る to get fat",
+    "太陽(たい・よう) the sun",
+    "太平洋(たい・へい・よう) the Pacific Ocean"
+  ]},
+  "重": { m: "тяжёлый; важный", ex: [
+    "重(おも)い heavy",
+    "重大(じゅう・だい)な important",
+    "体重(たい・じゅう) weight",
+    "重力(じゅう・りょく) gravity"
+  ]},
+  "軽": { m: "лёгкий", ex: [
+    "軽(かる)い light",
+    "軽油(けい・ゆ) gas oil",
+    "軽食(けい・しょく) a snack",
+    "軽自動車(けい・じ・どう・しゃ) a compact car"
+  ]},
+  "狭": { m: "узкий", ex: [
+    "狭(せま)い narrow, small",
+    "狭義(きょう・ぎ) a narrow sense",
+    "狭(せま)き門(もん) the strait gate"
+  ]},
+  "弱": { m: "слабый", ex: [
+    "弱(よわ)い weak",
+    "弱(よわ)る to weaken",
+    "弱々(よわ・よわ)しい fragile",
+    "弱点(じゃく・てん) a weak point"
+  ]},
+  "眠": { m: "сон; спать", ex: [
+    "眠(ねむ)い sleepy",
+    "眠(ねむ)る to sleep",
+    "冬眠(とう・みん) hibernation",
+    "安眠(あん・みん) a good sleep"
+  ]},
+  "苦": { m: "страдать; горький", ex: [
+    "苦(くる)しい painful, hard",
+    "苦(くる)しむ to suffer",
+    "苦(にが)い bitter",
+    "苦痛(く・つう) pain"
+  ]},
+  "簡": { m: "простой; письмо", ex: [
+    "簡単(かん・たん)な simple, easy",
+    "書簡(しょ・かん) a letter",
+    "航空書簡(こう・くう・しょ・かん) an aerogram"
+  ]},
+  "単": { m: "простой; единица", ex: [
+    "単(たん)に only, simply",
+    "単位(たん・い) a unit",
+    "単語(たん・ご) a word",
+    "単数(たん・すう) singular number"
+  ]},
+
+  // ===== Урок 39 (Airport) =====
+  "空": { m: "небо; пустой", ex: [
+    "空(そら) sky",
+    "空(あ)く to become empty",
+    "空(あ)ける to open",
+    "空気(くう・き) air",
+    "空席(くう・せき) a vacant seat",
+    "空間(くう・かん) space"
+  ]},
+  "港": { m: "порт; гавань", ex: [
+    "港(みなと) a harbor, a port",
+    "港町(みなと・まち) a port city",
+    "空港(くう・こう) an airport",
+    "出港(しゅっ・こう) to leave port"
+  ]},
+  "飛": { m: "летать", ex: [
+    "飛(と)ぶ to fly",
+    "飛(と)ばす to fly",
+    "飛行機(ひ・こう・き) an airplane",
+    "飛行場(ひ・こう・じょう) an airfield",
+    "飛行船(ひ・こう・せん) an airship"
+  ]},
+  "階": { m: "этаж; ступень", ex: [
+    "～階(かい) ～ floors",
+    "階段(かい・だん) stairs",
+    "一階(いっ・かい) the 1st floor",
+    "段階(だん・かい) a step, a stage"
+  ]},
+  "建": { m: "строить", ex: [
+    "建(た)つ to be built",
+    "建(た)てる to build",
+    "建物(たて・もの) a building",
+    "建設(けん・せつ) to construct"
+  ]},
+  "設": { m: "основывать; устраивать", ex: [
+    "設計(せっ・けい) to plan, to design",
+    "設備(せつ・び) equipment",
+    "設立(せつ・りつ) to establish"
+  ]},
+  "完": { m: "завершать", ex: [
+    "完全(かん・ぜん)な perfect",
+    "完了(かん・りょう) to finish",
+    "完成(かん・せい) to complete"
+  ]},
+  "成": { m: "становиться; формироваться", ex: [
+    "成(な)る to become",
+    "成人(せい・じん) an adult",
+    "成功(せい・こう) to succeed",
+    "成立(せい・りつ) to be organized",
+    "成田(なり・た) Narita"
+  ]},
+  "費": { m: "расходовать; расходы", ex: [
+    "費用(ひ・よう) an expense",
+    "食費(しょく・ひ) food expenses",
+    "交通費(こう・つう・ひ) travel expenses",
+    "学費(がく・ひ) school expenses"
+  ]},
+  "放": { m: "выпускать; вещать", ex: [
+    "放(はな)す to release, to let go",
+    "放送(ほう・そう) to broadcast",
+    "開放(かい・ほう) to open"
+  ]},
+
+  // ===== Урок 40 (Geographical Features) =====
+  "位": { m: "положение; ранг", ex: [
+    "位(くらい) rank",
+    "第一位(だい・いち・い) the 1st place",
+    "学位(がく・い) a degree",
+    "地位(ち・い) position"
+  ]},
+  "置": { m: "ставить; класть", ex: [
+    "置(お)く to set, to lay",
+    "位置(い・ち) position, a location",
+    "置(お)き時計(ど・けい) a table clock",
+    "設置(せっ・ち) to set up"
+  ]},
+  "横": { m: "горизонтальный; бок", ex: [
+    "横(よこ) the side",
+    "横浜(よこ・はま) Yokohama",
+    "横断(おう・だん) crossing",
+    "横転(おう・てん) to turn over"
+  ]},
+  "向": { m: "направление; обращённый", ex: [
+    "向(む)く to turn toward",
+    "向(む)こう on the other side, over there",
+    "南向(みなみ・む)き facing south",
+    "方向(ほう・こう) a direction"
+  ]},
+  "原": { m: "поле; источник; основа", ex: [
+    "原(はら) a field",
+    "原因(げん・いん) a cause, a factor",
+    "原子(げん・し) an atom",
+    "高原(こう・げん) highlands"
+  ]},
+  "平": { m: "плоский; ровный", ex: [
+    "平(たい)らな flat, even",
+    "平日(へい・じつ) a weekday",
+    "平和(へい・わ) peace",
+    "平等(びょう・どう) equality"
+  ]},
+  "野": { m: "поле; дикий", ex: [
+    "野(の) field",
+    "野山(の・やま) hills and fields",
+    "野菜(や・さい) vegetables",
+    "分野(ぶん・や) a field, a sphere",
+    "野球(や・きゅう) baseball"
+  ]},
+  "風": { m: "ветер; атмосфера", ex: [
+    "風(かぜ) wind",
+    "北風(きた・かぜ) a north wind",
+    "台風(たい・ふう) a typhoon",
+    "和風(わ・ふう) Japanese style"
+  ]},
+  "両": { m: "оба; пара", ex: [
+    "両親(りょう・しん) parents",
+    "車両(しゃ・りょう) vehicles, cars",
+    "両替(りょう・がえ) exchange of money",
+    "両方(りょう・ほう) both"
+  ]},
+  "橋": { m: "мост", ex: [
+    "橋(はし) a bridge",
+    "鉄橋(てっ・きょう) an iron bridge",
+    "歩道橋(ほ・どう・きょう) a pedestrian bridge"
+  ]},
+
+  // ===== Урок 41 (Kanji Compound 2) =====
+  "老": { m: "старый; aged", ex: [
+    "老(お)いる to get old",
+    "老人(ろう・じん) an old person",
+    "老化(ろう・か) senility",
+    "老後(ろう・ご) one's old age"
+  ]},
+  "族": { m: "род; клан", ex: [
+    "家族(か・ぞく) a family",
+    "民族(みん・ぞく) a people, a nation"
+  ]},
+  "配": { m: "распределять; беспокоиться", ex: [
+    "配(くば)る to distribute",
+    "心配(しん・ぱい) to worry",
+    "配達(はい・たつ) to deliver"
+  ]},
+  "衛": { m: "защита", ex: [
+    "衛生(えい・せい) hygiene"
+  ]},
+  "退": { m: "отступать; уходить", ex: [
+    "退院(たい・いん) to leave hospital",
+    "退学(たい・がく) to leave school",
+    "退社(たい・しゃ) to leave the office"
+  ]},
+  "効": { m: "эффект; действовать", ex: [
+    "効(き)く to work on, to be effective",
+    "効果(こう・か) an effect",
+    "有効(ゆう・こう) validity",
+    "無効(む・こう) invalidity"
+  ]},
+  "民": { m: "народ; гражданин", ex: [
+    "国民(こく・みん) a people, a nation",
+    "市民(し・みん) a citizen",
+    "難民(なん・みん) refugees",
+    "民族学(みん・ぞく・がく) ethnology"
+  ]},
+  "訪": { m: "посещать", ex: [
+    "訪(たず)ねる to call on",
+    "訪(おとず)れる to visit",
+    "訪問(ほう・もん) to pay a visit",
+    "訪米(ほう・べい) to visit the U.S.A."
+  ]},
+  "顔": { m: "лицо", ex: [
+    "顔(かお) face",
+    "顔色(かお・いろ) complexion",
+    "洗顔(せん・がん) to wash one's face",
+    "顔面(がん・めん) the face"
+  ]},
+  "歯": { m: "зуб", ex: [
+    "歯(は) a tooth",
+    "歯(は)ブラシ a toothbrush",
+    "歯科医(し・か・い) a dentist",
+    "歯車(は・ぐるま) a gear"
+  ]},
+
+  // ===== Урок 42 (University Life) =====
+  "卒": { m: "оканчивать (учёбу)", ex: [
+    "卒業(そつ・ぎょう) graduation"
+  ]},
+  "論": { m: "рассуждение; теория", ex: [
+    "論文(ろん・ぶん) a thesis",
+    "討論(とう・ろん) a discussion"
+  ]},
+  "実": { m: "реальность; плод", ex: [
+    "実(じつ)に actually",
+    "実験(じっ・けん) an experiment",
+    "実習(じっ・しゅう) practice"
+  ]},
+  "調": { m: "исследовать; тон", ex: [
+    "調(しら)べる to investigate",
+    "調査(ちょう・さ) an investigation",
+    "調子(ちょう・し) condition"
+  ]},
+  "必": { m: "обязательно", ex: [
+    "必(かなら)ず certainly",
+    "必要(ひつ・よう) necessary"
+  ]},
+  "要": { m: "нуждаться; важный", ex: [
+    "要(い)る to need",
+    "必要(ひつ・よう) necessary",
+    "要点(よう・てん) the main point"
+  ]},
+  "類": { m: "вид; род", ex: [
+    "種類(しゅ・るい) a kind",
+    "分類(ぶん・るい) classification",
+    "書類(しょ・るい) documents"
+  ]},
+  "得": { m: "получать; выгодный", ex: [
+    "得(え)る to gain",
+    "得意(とく・い) good at"
+  ]},
+  "失": { m: "терять; ошибка", ex: [
+    "失(しっ)する to lose",
+    "失礼(しつ・れい) rudeness"
+  ]},
+  "礼": { m: "этикет; благодарность", ex: [
+    "礼(れい) courtesy",
+    "お礼(れい) thanks",
+    "失礼(しつ・れい) rudeness"
+  ]},
+
+  // ===== Урок 43 (Verbs of Change) =====
+  "増": { m: "увеличивать(ся)", ex: [
+    "増(ふ)える to increase",
+    "増(ふ)やす to increase",
+    "増加(ぞう・か) increase"
+  ]},
+  "加": { m: "добавлять", ex: [
+    "加(くわ)える to add",
+    "増加(ぞう・か) increase",
+    "参加(さん・か) participation"
+  ]},
+  "減": { m: "уменьшать(ся)", ex: [
+    "減(へ)る to decrease",
+    "減(へ)らす to decrease",
+    "減少(げん・しょう) decrease"
+  ]},
+  "変": { m: "менять(ся); странный", ex: [
+    "変(か)わる to change",
+    "変(か)える to change",
+    "変化(へん・か) change"
+  ]},
+  "移": { m: "перемещать(ся)", ex: [
+    "移(うつ)る to move",
+    "移(うつ)す to move",
+    "移動(い・どう) movement"
+  ]},
+  "続": { m: "продолжать(ся)", ex: [
+    "続(つづ)く to continue",
+    "続(つづ)ける to continue",
+    "連続(れん・ぞく) continuation"
+  ]},
+  "過": { m: "проходить; чрезмерный", ex: [
+    "過(す)ぎる to pass",
+    "過去(か・こ) the past"
+  ]},
+  "進": { m: "продвигаться", ex: [
+    "進(すす)む to advance",
+    "進(すす)める to advance",
+    "進歩(しん・ぽ) progress"
+  ]},
+  "以": { m: "посредством; начиная с", ex: [
+    "以上(い・じょう) more than",
+    "以下(い・か) less than",
+    "以前(い・ぜん) before"
+  ]},
+  "美": { m: "красивый", ex: [
+    "美(うつく)しい beautiful",
+    "美術(び・じゅつ) fine arts",
+    "美人(び・じん) a beautiful woman"
+  ]},
+
+  // ===== Урок 44 (Abstract Ideas) =====
+  "比": { m: "сравнивать", ex: [
+    "比(くら)べる to compare",
+    "比較(ひ・かく) comparison"
+  ]},
+  "較": { m: "сравнивать", ex: [
+    "比較(ひ・かく) comparison"
+  ]},
+  "反": { m: "противоположный; анти-", ex: [
+    "反(そ)る to oppose",
+    "反対(はん・たい) opposition",
+    "反応(はん・のう) reaction"
+  ]},
+  "対": { m: "напротив; пара", ex: [
+    "対(たい) opposite",
+    "反対(はん・たい) opposition",
+    "対談(たい・だん) a talk"
+  ]},
+  "賛": { m: "соглашаться", ex: [
+    "賛成(さん・せい) agreement"
+  ]},
+  "共": { m: "вместе; общий", ex: [
+    "共(とも)に together",
+    "共通(きょう・つう) common"
+  ]},
+  "直": { m: "прямой; немедленно", ex: [
+    "直(ただ)ちに immediately",
+    "直接(ちょく・せつ) direct",
+    "正直(しょう・じき) honest"
+  ]},
+  "表": { m: "поверхность; выражать", ex: [
+    "表(おもて) surface",
+    "表現(ひょう・げん) expression",
+    "発表(はっ・ぴょう) announcement"
+  ]},
+  "現": { m: "появляться; настоящий", ex: [
+    "現(あらわ)れる to appear",
+    "表現(ひょう・げん) expression",
+    "現在(げん・ざい) present"
+  ]},
+  "初": { m: "первый; начало", ex: [
+    "初(はじ)め first",
+    "最初(さい・しょ) the first",
+    "初級(しょ・きゅう) beginner level"
+  ]},
+
+  // ===== Урок 45 (Affixes 3) =====
+  "全": { m: "целый; весь", ex: [
+    "全(すべ)て all",
+    "全部(ぜん・ぶ) all",
+    "完全(かん・ぜん)な perfect"
+  ]},
+  "最": { m: "самый", ex: [
+    "最(もっと)も most",
+    "最初(さい・しょ) the first",
+    "最後(さい・ご) the last"
+  ]},
+  "無": { m: "отсутствие; не-", ex: [
+    "無(な)い nothing",
+    "無料(む・りょう) free",
+    "無理(む・り) unreasonable"
+  ]},
+  "非": { m: "не-", ex: [
+    "非(ひ) not",
+    "非常に(ひ・じょう)に very"
+  ]},
+  "第": { m: "порядковый префикс", ex: [
+    "第一(だい・いち) the first",
+    "第二(だい・に) the second"
+  ]},
+  "的": { m: "цель; суффикс -ный", ex: [
+    "的(てき) target",
+    "目的(もく・てき) purpose",
+    "積極的(せっ・きょく・てき) active"
+  ]},
+  "性": { m: "природа; характер", ex: [
+    "性(せい) nature",
+    "性格(せい・かく) character",
+    "女性(じょ・せい) woman"
+  ]},
+  "法": { m: "закон; метод", ex: [
+    "法(ほう) law",
+    "方法(ほう・ほう) method",
+    "文法(ぶん・ぽう) grammar"
+  ]},
+  "制": { m: "система; контроль", ex: [
+    "制(せい) system",
+    "制度(せい・ど) system",
+    "制限(せい・げん) limit"
+  ]},
+  "課": { m: "раздел; урок", ex: [
+    "課(か) section",
+    "課題(か・だい) a subject",
+    "第一課(だい・いっ・か) Lesson 1"
+  ]}
