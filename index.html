@@ -44,15 +44,6 @@ header {
   display: flex; align-items: center; justify-content: space-between;
 }
 header h1 { font-size: 17px; margin: 0; font-weight: 600; letter-spacing: 0.3px; }
-header .badge {
-  font-size: 12px; color: var(--muted);
-  display: flex; align-items: center; gap: 6px;
-  cursor: pointer; padding: 6px 10px; border-radius: 999px;
-  background: var(--card); border: 1px solid var(--border);
-  user-select: none;
-}
-header .badge:active { background: var(--card2); }
-header .badge .sep { opacity: 0.3; }
 #menuBtn {
   background: none; border: 0; color: var(--text);
   padding: 6px; margin: -6px 6px -6px -8px;
@@ -208,17 +199,22 @@ h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: upp
   line-height: 1;
 }
 .home-hero .streak-lbl { color: var(--muted); font-size: 13px; margin-top: 6px; }
-.calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 12px; }
+.calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px; }
 .cal-cell {
-  aspect-ratio: 1; border-radius: 5px;
-  background: var(--card2); border: 1px solid var(--border);
+  aspect-ratio: 1; border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid var(--border);
 }
-.cal-cell[data-lvl="1"] { background: rgba(108,158,255,0.25); border-color: rgba(108,158,255,0.4); }
-.cal-cell[data-lvl="2"] { background: rgba(108,158,255,0.5); border-color: rgba(108,158,255,0.6); }
-.cal-cell[data-lvl="3"] { background: rgba(108,158,255,0.75); border-color: rgba(108,158,255,0.85); }
-.cal-cell[data-lvl="4"] { background: var(--accent); border-color: var(--accent); }
-.cal-legend { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin-top: 8px; font-size: 10px; color: var(--muted); }
-.cal-legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+.cal-cell[data-lvl="1"],
+.cal-cell[data-lvl="2"],
+.cal-cell[data-lvl="3"],
+.cal-cell[data-lvl="4"] {
+  background: var(--bad);
+  border-color: var(--bad);
+}
+.cal-legend { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin-top: 10px; font-size: 10px; color: var(--muted); }
+.cal-legend .sw { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--border); }
+.cal-legend .sw.fill { background: var(--bad); border-color: var(--bad); }
 .level-prog { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
 .level-prog .name { font-weight: 500; }
 .level-prog .pct { color: var(--muted); }
@@ -291,24 +287,6 @@ h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: upp
 }
 #levelList button.active .n { background: var(--accent); color: #0b1020; }
 
-/* Badge popup */
-#badgePop {
-  position: fixed; top: calc(env(safe-area-inset-top) + 52px); right: 12px;
-  background: var(--card2); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px 16px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
-  z-index: 150; max-width: 280px;
-  opacity: 0; pointer-events: none; transform: translateY(-6px);
-  transition: opacity 0.18s, transform 0.18s;
-  font-size: 13px; line-height: 1.5;
-}
-#badgePop.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
-#badgePop .row2 { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
-#badgePop .row2 + .row2 { border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px; }
-#badgePop .ico2 { font-size: 18px; line-height: 1; flex-shrink: 0; }
-#badgePop .txt { color: var(--muted); font-size: 12px; }
-#badgePop .txt b { color: var(--text); font-weight: 600; }
-
 /* Confirm modal */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 300;
@@ -362,7 +340,6 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
       </svg>
     </button>
     <h1>漢 Kanji Study</h1>
-    <div class="badge" id="headerBadge"></div>
   </header>
   <main id="view"></main>
   <nav>
@@ -372,7 +349,6 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
     <button data-tab="stats"><span class="ico">📊</span>Стата</button>
   </nav>
 </div>
-<div id="badgePop"></div>
 <div id="drawerOverlay"></div>
 <aside id="drawer">
   <div class="drawer-header">
@@ -654,7 +630,6 @@ function buildStudyQueue() {
 
 /* ====================== UI ====================== */
 const view = document.getElementById('view');
-const headerBadge = document.getElementById('headerBadge');
 const levelList = document.getElementById('levelList');
 const drawer = document.getElementById('drawer');
 const drawerOverlay = document.getElementById('drawerOverlay');
@@ -699,19 +674,7 @@ function calcStreak() {
   return streak;
 }
 
-function updateHeaderBadge() {
-  const due = dueCards().length;
-  const nw = Math.min(newCards().length, state.settings.newPerDay);
-  const today = new Date().toISOString().slice(0, 10);
-  const done = state.history[today] || 0;
-  const streak = calcStreak();
-  headerBadge.innerHTML = `
-    <span>📅 ${done}</span>
-    <span class="sep">·</span>
-    <span>🔔 ${due + nw}</span>
-    <span class="sep">·</span>
-    <span>🔥 ${streak}</span>`;
-}
+function updateHeaderBadge() { /* удалено — счётчик убран */ }
 
 function render() {
   document.querySelectorAll('nav button').forEach(b => {
@@ -733,7 +696,7 @@ function renderHome() {
   const todayNew = state.historyNew[today] || 0;
   const todayReviews = Math.max(0, todayTotal - todayNew);
 
-  // Календарь на 35 дней
+  // Календарь на 35 дней — кружки (пустой / красный)
   const cells = [];
   const now = new Date();
   for (let i = 34; i >= 0; i--) {
@@ -741,13 +704,9 @@ function renderHome() {
     d.setDate(d.getDate() - i);
     const key = d.toISOString().slice(0, 10);
     const c = state.history[key] || 0;
-    let lvl = 0;
-    if (c > 0 && c <= 5) lvl = 1;
-    else if (c <= 15) lvl = 2;
-    else if (c <= 30) lvl = 3;
-    else if (c > 30) lvl = 4;
+    const filled = c > 0 ? 1 : 0;
     const isToday = key === today;
-    cells.push(`<div class="cal-cell" data-lvl="${lvl}" ${isToday ? 'style="box-shadow:0 0 0 1.5px var(--warn)"' : ''}></div>`);
+    cells.push(`<div class="cal-cell" data-lvl="${filled}" ${isToday ? 'style="box-shadow:0 0 0 2px var(--warn)"' : ''}></div>`);
   }
 
   // Прогресс по уровням
@@ -783,13 +742,10 @@ function renderHome() {
         streak < 5 ? 'дня подряд' : 'дней подряд'}</div>
       <div class="calendar">${cells.join('')}</div>
       <div class="cal-legend">
-        <span>меньше</span>
-        <span class="sw" style="background:var(--card2);border:1px solid var(--border);"></span>
-        <span class="sw" style="background:rgba(108,158,255,0.25);"></span>
-        <span class="sw" style="background:rgba(108,158,255,0.5);"></span>
-        <span class="sw" style="background:rgba(108,158,255,0.75);"></span>
-        <span class="sw" style="background:var(--accent);"></span>
-        <span>больше</span>
+        <span class="sw"></span>
+        <span>не изучал</span>
+        <span class="sw fill" style="margin-left:10px;"></span>
+        <span>изучал</span>
       </div>
     </div>
 
@@ -1444,41 +1400,6 @@ document.getElementById('confirmModal').addEventListener('click', e => {
   if (e.target.id === 'confirmModal') hideConfirm();
 });
 
-/* ====================== BADGE POPUP ====================== */
-function toggleBadgePop() {
-  const pop = document.getElementById('badgePop');
-  if (pop.classList.contains('open')) {
-    pop.classList.remove('open');
-    return;
-  }
-  const due = dueCards().length;
-  const nw = Math.min(newCards().length, state.settings.newPerDay);
-  const today = new Date().toISOString().slice(0, 10);
-  const done = state.history[today] || 0;
-  const streak = calcStreak();
-  pop.innerHTML = `
-    <div class="row2">
-      <div class="ico2">📅</div>
-      <div class="txt"><b>${done}</b> — повторено сегодня.</div>
-    </div>
-    <div class="row2">
-      <div class="ico2">🔔</div>
-      <div class="txt"><b>${due + nw}</b> — ждут сейчас.<br>
-      Просроченных: <b>${due}</b>, новых: <b>${nw}</b>.</div>
-    </div>
-    <div class="row2">
-      <div class="ico2">🔥</div>
-      <div class="txt"><b>${streak}</b> — дней подряд.</div>
-    </div>`;
-  pop.classList.add('open');
-}
-document.addEventListener('click', e => {
-  const pop = document.getElementById('badgePop');
-  if (!pop || !pop.classList.contains('open')) return;
-  if (pop.contains(e.target) || headerBadge.contains(e.target)) return;
-  pop.classList.remove('open');
-});
-
 /* ====================== INIT ====================== */
 document.querySelectorAll('nav button').forEach(b => {
   b.addEventListener('click', () => {
@@ -1490,7 +1411,6 @@ document.querySelectorAll('nav button').forEach(b => {
 document.getElementById('menuBtn').addEventListener('click', openDrawer);
 document.getElementById('drawerClose').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
-headerBadge.addEventListener('click', e => { e.stopPropagation(); toggleBadgePop(); });
 
 let touchStartX = 0;
 drawer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
