@@ -98,18 +98,18 @@ nav button.active { color: var(--accent); }
 
 .examples { margin-top: 14px; border-top: 1px dashed var(--border); padding-top: 14px; }
 .examples .ex {
-  display: flex; justify-content: space-between; gap: 14px;
-  padding: 8px 0; align-items: flex-start; flex-wrap: wrap;
+  padding: 8px 0; font-size: 15px; line-height: 1.6;
+  word-wrap: break-word; overflow-wrap: anywhere;
 }
-.examples .ex > div:first-child { flex-shrink: 0; min-width: 0; max-width: 45%; }
 .examples .ex .w {
   font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
-  font-size: 17px; line-height: 1.3; word-break: break-word;
+  font-size: 17px; color: var(--text);
 }
-.examples .ex .r { color: var(--muted); font-size: 13px; margin-top: 2px; word-break: break-word; }
+.examples .ex .r {
+  color: var(--muted); font-size: 14px;
+}
 .examples .ex .m {
-  text-align: right; max-width: 55%; min-width: 0;
-  word-wrap: break-word; overflow-wrap: anywhere;
+  color: var(--text); font-size: 15px;
 }
 
 .flashcard .back .meanings,
@@ -393,6 +393,7 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
 <div class="toast" id="toast"></div>
 
 <script src="kanji_data.js"></script>
+<script src="bkb_data.js"></script>
 <script src="kanji_ru.js"></script>
 <script src="warodai_mini.js"></script>
 
@@ -453,26 +454,38 @@ function parseData(raw) {
     if (parts.length < 4) return null;
     const [k, level, meaningsRaw, on, kun, ex] = parts;
 
-    const examples = (ex || '').split(';').map(s => {
-      const seg = s.split(':');
-      if (seg.length < 2) return null;
-      const w = seg[0].trim();
-      const r = (seg[1] || '').trim();
-      let m = '';
-      if (typeof WARODAI !== 'undefined') {
-        m = WARODAI[`${w}:${r}`] || WARODAI[`${w}:`] || '';
-      }
-      if (!m) m = seg.slice(2).join(':').trim();
-      m = cleanMeaning(m);
-      if (!isMeaningValid(m)) m = '—';
-      return w ? { word: w, reading: r, meaning: m } : null;
-    }).filter(Boolean);
+        // ПРИОРИТЕТ 1: примеры из BKB (Basic Kanji Book)
+    let examples = [];
+    if (typeof BKB !== 'undefined' && BKB[k.trim()] && BKB[k.trim()].ex) {
+      examples = BKB[k.trim()].ex.map(s => ({ raw: s }));
+    }
+    // ПРИОРИТЕТ 2: сборка из kanji_data + Warodai (как раньше)
+    if (examples.length === 0) {
+      examples = (ex || '').split(';').map(s => {
+        const seg = s.split(':');
+        if (seg.length < 2) return null;
+        const w = seg[0].trim();
+        const r = (seg[1] || '').trim();
+        let m = '';
+        if (typeof WARODAI !== 'undefined') {
+          m = WARODAI[`${w}:${r}`] || WARODAI[`${w}:`] || '';
+        }
+        if (!m) m = seg.slice(2).join(':').trim();
+        return w ? { word: w, reading: r, meaning: cleanMeaning(m) } : null;
+      }).filter(Boolean);
+    }
 
-    const kanjiKey = k.trim();
+       const kanjiKey = k.trim();
     let kanjiMeanings = null;
 
-    // ПРИОРИТЕТ 1: KANJI_RU — русский перевод из KanjiStudy_jpn-rus
-    if (typeof KANJI_RU !== 'undefined' && KANJI_RU[kanjiKey]) {
+    // ПРИОРИТЕТ 1: BKB — значение из Basic Kanji Book
+    if (typeof BKB !== 'undefined' && BKB[kanjiKey] && BKB[kanjiKey].m) {
+      const cleaned = cleanMeaning(BKB[kanjiKey].m);
+      if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
+    }
+
+    // ПРИОРИТЕТ 2: KANJI_RU — русский перевод из KanjiStudy_jpn-rus
+    if (!kanjiMeanings && typeof KANJI_RU !== 'undefined' && KANJI_RU[kanjiKey]) {
       const cleaned = cleanMeaning(KANJI_RU[kanjiKey]);
       if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
     }
@@ -907,11 +920,10 @@ function renderStudy() {
         ${d.kun.length ? `<div class="row"><span class="label">Kun</span><span class="val">${d.kun.join('、')}</span></div>` : ''}
         ${d.examples.length ? `
           <div class="examples">
-            ${d.examples.map(e => `
-              <div class="ex">
-                <div><span class="w">${e.word}</span><div class="r">${e.reading}</div></div>
-                <div class="m">${e.meaning}</div>
-              </div>`).join('')}
+            ${d.examples.map(e => e.raw
+              ? `<div class="ex">${e.raw}</div>`
+              : `<div class="ex"><span class="w">${e.word}</span><span class="r">(${e.reading})</span> <span class="m">${e.meaning}</span></div>`
+            ).join('')}
           </div>` : ''}
       </div>
     </div>
@@ -1224,13 +1236,13 @@ function openDetail(k) {
         <div class="meanings">${d.meanings.join(', ')}</div>
         ${d.on.length ? `<div class="row"><span class="label">On</span><span class="val">${d.on.join('、')}</span></div>` : ''}
         ${d.kun.length ? `<div class="row"><span class="label">Kun</span><span class="val">${d.kun.join('、')}</span></div>` : ''}
-        ${d.examples.length ? `<div class="examples">
-          ${d.examples.map(e => `
-            <div class="ex">
-              <div><span class="w">${e.word}</span><div class="r">${e.reading}</div></div>
-              <div class="m">${e.meaning}</div>
-            </div>`).join('')}
-        </div>` : ''}
+        ${d.examples.length ? `
+          <div class="examples">
+            ${d.examples.map(e => e.raw
+              ? `<div class="ex">${e.raw}</div>`
+              : `<div class="ex"><span class="w">${e.word}</span><span class="r">(${e.reading})</span> <span class="m">${e.meaning}</span></div>`
+            ).join('')}
+          </div>` : ''}
       </div>
       <div class="bar" style="width:100%; margin-top:14px;"><div class="fill" style="width:${mastery}%"></div></div>
     </div>
