@@ -393,6 +393,7 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
 <div class="toast" id="toast"></div>
 
 <script src="kanji_data.js"></script>
+<script src="kanji_ru.js"></script>
 <script src="warodai_mini.js"></script>
 
 <script>
@@ -470,18 +471,26 @@ function parseData(raw) {
     const kanjiKey = k.trim();
     let kanjiMeanings = null;
 
-    if (typeof WARODAI !== 'undefined' && WARODAI[`${kanjiKey}:`]) {
+    // ПРИОРИТЕТ 1: KANJI_RU — русский перевод из KanjiStudy_jpn-rus
+    if (typeof KANJI_RU !== 'undefined' && KANJI_RU[kanjiKey]) {
+      const cleaned = cleanMeaning(KANJI_RU[kanjiKey]);
+      if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
+    }
+
+    // ПРИОРИТЕТ 2: WARODAI — если кандзи сам по себе является словом
+    if (!kanjiMeanings && typeof WARODAI !== 'undefined' && WARODAI[`${kanjiKey}:`]) {
       const cleaned = cleanMeaning(WARODAI[`${kanjiKey}:`]);
       if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
     }
 
+    // ПРИОРИТЕТ 3: значения из kanji_data.js (англ./смешанные)
     if (!kanjiMeanings) {
       kanjiMeanings = meaningsRaw.split(/[,;]/)
         .map(s => cleanMeaning(s.trim()))
         .filter(s => s && isMeaningValid(s));
     }
 
-    if (kanjiMeanings.length === 0) {
+    if (!kanjiMeanings || kanjiMeanings.length === 0) {
       kanjiMeanings = [cleanMeaning(meaningsRaw) || '—'];
     }
 
