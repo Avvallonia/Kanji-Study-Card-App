@@ -53,28 +53,6 @@ header .badge {
 }
 header .badge:active { background: var(--card2); }
 header .badge .sep { opacity: 0.3; }
-
-/* Попап-подсказка */
-#badgePop {
-  position: fixed; top: calc(env(safe-area-inset-top) + 52px); right: 12px;
-  background: var(--card2); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px 16px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
-  z-index: 150; max-width: 280px;
-  opacity: 0; pointer-events: none; transform: translateY(-6px);
-  transition: opacity 0.18s, transform 0.18s;
-  font-size: 13px; line-height: 1.5;
-}
-#badgePop.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
-#badgePop .row2 {
-  display: flex; gap: 10px; align-items: flex-start;
-  padding: 6px 0;
-}
-#badgePop .row2 + .row2 { border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px; }
-#badgePop .ico2 { font-size: 18px; line-height: 1; flex-shrink: 0; }
-#badgePop .txt { color: var(--muted); font-size: 12px; }
-#badgePop .txt b { color: var(--text); font-weight: 600; }
-/* Гамбургер-кнопка */
 #menuBtn {
   background: none; border: 0; color: var(--text);
   padding: 6px; margin: -6px 6px -6px -8px;
@@ -82,16 +60,182 @@ header .badge .sep { opacity: 0.3; }
   border-radius: 8px;
 }
 #menuBtn:active { background: var(--card2); }
+main { flex: 1; padding: 16px; max-width: 640px; margin: 0 auto; width: 100%; }
+nav {
+  position: sticky; bottom: 0; z-index: 10;
+  background: rgba(15,17,21,0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+nav button {
+  background: none; border: 0; color: var(--muted); font-size: 10px;
+  padding: 8px 2px 10px; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; font-family: inherit;
+}
+nav button .ico { font-size: 20px; line-height: 1; }
+nav button.active { color: var(--accent); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 14px; }
+.flashcard {
+  min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; user-select: none;
+}
+.flashcard .kanji {
+  font-size: 96px; line-height: 1;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  margin-bottom: 8px;
+}
+.flashcard .hint { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+.flashcard .back { width: 100%; text-align: left; }
+.flashcard .back .meanings { margin-bottom: 14px; }
+.row { display: flex; gap: 10px; margin: 8px 0; align-items: baseline; }
+.row .label {
+  color: var(--muted); font-size: 11px; min-width: 44px;
+  text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500;
+}
+.row .val { word-break: break-word; }
+.examples { margin-top: 14px; border-top: 1px dashed var(--border); padding-top: 14px; }
+.examples .ex { display: flex; justify-content: space-between; gap: 14px; padding: 8px 0; align-items: baseline; }
+.examples .ex > div:first-child { flex-shrink: 0; }
+.examples .ex .w {
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  font-size: 17px; line-height: 1.3;
+}
+.examples .ex .r { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.examples .ex .m { text-align: right; max-width: 60%; }
+.flashcard .back .meanings,
+.row .val,
+.examples .ex .m {
+  font-size: 16px; font-weight: 400;
+  letter-spacing: 0.2px; line-height: 1.55; color: var(--text);
+}
+.btn {
+  display: flex; align-items: center; justify-content: center;
+  padding: 14px 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--card2); color: var(--text);
+  font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer;
+  transition: transform 0.05s;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--accent); color: #0b1020; border-color: var(--accent); font-weight: 600; }
+.btn-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.btn-row-2 .btn[disabled] { opacity: 0.4; cursor: default; }
+.bar { height: 6px; background: var(--card2); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+.bar .fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.3s; }
 
-/* Оверлей */
+/* Quiz */
+.quiz-q { text-align: center; padding: 24px 12px; }
+.quiz-q .big {
+  font-size: 84px; line-height: 1;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  cursor: pointer; user-select: none; transition: transform 0.1s;
+}
+.quiz-q .big:active { transform: scale(0.96); }
+.quiz-q .prompt { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+.quiz-q .hint-tip { color: var(--muted); font-size: 11px; margin-top: 10px; opacity: 0.6; }
+.quiz-q .readings-hint {
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  font-size: 15px; color: var(--muted);
+  animation: fadeIn 0.2s;
+}
+.quiz-q .readings-hint b { color: var(--text); font-weight: 500; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.opts { display: grid; gap: 10px; }
+.opt {
+  padding: 16px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--card2); color: var(--text); font-family: inherit; font-size: 16px;
+  cursor: pointer; text-align: left;
+}
+.opt.correct { background: rgba(74,222,128,0.15); border-color: var(--good); color: var(--good); }
+.opt.wrong { background: rgba(248,113,113,0.15); border-color: var(--bad); color: var(--bad); }
+.opt:disabled { cursor: default; opacity: 0.85; }
+
+/* Browse */
+.search {
+  width: 100%; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--text); font-family: inherit; font-size: 15px; margin-bottom: 12px;
+}
+.search:focus { outline: none; border-color: var(--accent); }
+.klist { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
+.kitem {
+  aspect-ratio: 1; background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-size: 30px; font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  cursor: pointer; position: relative;
+}
+.kitem .dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+.kitem[data-status="learning"] .dot { background: var(--warn); }
+.kitem[data-status="review"] .dot { background: var(--good); }
+.kitem[data-status="new"] .dot { background: var(--accent); }
+
+/* Stats */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.stat .n { font-size: 26px; font-weight: 700; }
+.stat .l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin: 20px 0 10px; }
+.empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 14px; }
+.empty .big { font-size: 48px; margin-bottom: 8px; opacity: 0.4; }
+
+/* Home */
+.home-hero {
+  background: linear-gradient(135deg, #1a1f2e 0%, #151824 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.home-hero .streak-num {
+  font-size: 52px; font-weight: 700;
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.home-hero .streak-lbl { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+.calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 12px; }
+.cal-cell {
+  aspect-ratio: 1; border-radius: 5px;
+  background: var(--card2); border: 1px solid var(--border);
+}
+.cal-cell[data-lvl="1"] { background: rgba(108,158,255,0.25); border-color: rgba(108,158,255,0.4); }
+.cal-cell[data-lvl="2"] { background: rgba(108,158,255,0.5); border-color: rgba(108,158,255,0.6); }
+.cal-cell[data-lvl="3"] { background: rgba(108,158,255,0.75); border-color: rgba(108,158,255,0.85); }
+.cal-cell[data-lvl="4"] { background: var(--accent); border-color: var(--accent); }
+.cal-cell.today { box-shadow: 0 0 0 1.5px var(--warn); }
+.cal-legend { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin-top: 8px; font-size: 10px; color: var(--muted); }
+.cal-legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+
+.level-prog { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+.level-prog .name { font-weight: 500; }
+.level-prog .pct { color: var(--muted); }
+.level-prog .pct b { color: var(--accent); }
+
+.big-cta {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--accent), #a78bfa);
+  color: #0b1020; border: 0; border-radius: 18px;
+  padding: 22px 20px; width: 100%;
+  font-family: inherit; font-size: 17px; font-weight: 700;
+  cursor: pointer; margin-bottom: 14px;
+  box-shadow: 0 10px 30px rgba(108,158,255,0.25);
+  transition: transform 0.08s;
+}
+.big-cta:active { transform: scale(0.985); }
+.big-cta .sub { font-size: 12px; font-weight: 500; opacity: 0.75; margin-top: 6px; }
+
+/* Drawer */
 #drawerOverlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
   opacity: 0; pointer-events: none; transition: opacity 0.2s;
   z-index: 200;
 }
 #drawerOverlay.open { opacity: 1; pointer-events: auto; }
-
-/* Боковая панель */
 #drawer {
   position: fixed; top: 0; left: 0; bottom: 0;
   width: 260px; max-width: 80vw;
@@ -104,7 +248,6 @@ header .badge .sep { opacity: 0.3; }
   padding-bottom: env(safe-area-inset-bottom);
 }
 #drawer.open { transform: translateX(0); }
-
 .drawer-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 16px 18px 12px; border-bottom: 1px solid var(--border);
@@ -119,7 +262,6 @@ header .badge .sep { opacity: 0.3; }
   border-radius: 8px; font-family: inherit;
 }
 #drawerClose:active { background: var(--card2); }
-
 #levelList { padding: 8px 0; overflow-y: auto; }
 #levelList button {
   display: flex; align-items: center; justify-content: space-between;
@@ -140,136 +282,26 @@ header .badge .sep { opacity: 0.3; }
   background: var(--card2); padding: 2px 8px;
   border-radius: 999px;
 }
-#levelList button.active .n {
-  background: var(--accent); color: #0b1020;
-}
-main { flex: 1; padding: 16px; max-width: 640px; margin: 0 auto; width: 100%; }
-nav {
-  position: sticky; bottom: 0; z-index: 10;
-  background: rgba(15,17,21,0.95);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--border);
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-nav button {
-  background: none; border: 0; color: var(--muted); font-size: 11px;
-  padding: 8px 4px 10px; display: flex; flex-direction: column; align-items: center; gap: 3px;
-  cursor: pointer; font-family: inherit;
-}
-nav button .ico { font-size: 20px; line-height: 1; }
-nav button.active { color: var(--accent); }
-.card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 14px; }
-.flashcard {
-  min-height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; cursor: pointer; user-select: none;
-}
-.flashcard .kanji {
-  font-size: 120px; line-height: 1;
-  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
-  margin-bottom: 16px;
-}
-.flashcard .hint { color: var(--muted); font-size: 13px; }
-.flashcard .back { width: 100%; text-align: left; }
-.flashcard .back .meanings { margin-bottom: 14px; }
+#levelList button.active .n { background: var(--accent); color: #0b1020; }
 
-.row {
-  display: flex; gap: 10px; margin: 8px 0;
-  align-items: baseline;
+/* Badge popup */
+#badgePop {
+  position: fixed; top: calc(env(safe-area-inset-top) + 52px); right: 12px;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 16px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  z-index: 150; max-width: 280px;
+  opacity: 0; pointer-events: none; transform: translateY(-6px);
+  transition: opacity 0.18s, transform 0.18s;
+  font-size: 13px; line-height: 1.5;
 }
-.row .label {
-  color: var(--muted); font-size: 11px; min-width: 44px;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  font-weight: 500;
-}
-.row .val { word-break: break-word; }
+#badgePop.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#badgePop .row2 { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
+#badgePop .row2 + .row2 { border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px; }
+#badgePop .ico2 { font-size: 18px; line-height: 1; flex-shrink: 0; }
+#badgePop .txt { color: var(--muted); font-size: 12px; }
+#badgePop .txt b { color: var(--text); font-weight: 600; }
 
-.examples {
-  margin-top: 14px; border-top: 1px dashed var(--border);
-  padding-top: 14px;
-}
-.examples .ex {
-  display: flex; justify-content: space-between; gap: 14px;
-  padding: 8px 0; align-items: baseline;
-}
-.examples .ex > div:first-child { flex-shrink: 0; }
-.examples .ex .w {
-  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
-  font-size: 17px; line-height: 1.3;
-}
-.examples .ex .r {
-  color: var(--muted); font-size: 13px; margin-top: 2px;
-}
-.examples .ex .m { text-align: right; max-width: 60%; }
-
-/* Единый стиль для всех переводов (значение кандзи, чтения, переводы слов) */
-.flashcard .back .meanings,
-.row .val,
-.examples .ex .m {
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-  line-height: 1.55;
-  color: var(--text);
-}
-.btn {
-  display: flex; align-items: center; justify-content: center;
-  padding: 14px 12px; border-radius: 12px; border: 1px solid var(--border);
-  background: var(--card2); color: var(--text);
-  font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer;
-  transition: transform 0.05s;
-}
-.btn:active { transform: scale(0.98); }
-.btn-primary { background: var(--accent); color: #0b1020; border-color: var(--accent); font-weight: 600; }
-.btn-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
-.btn-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-.btn-row-2 .btn[disabled] { opacity: 0.4; cursor: default; }
-.btn-again { background: rgba(248,113,113,0.15); border-color: rgba(248,113,113,0.4); color: var(--bad); }
-.btn-hard  { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.4); color: var(--warn); }
-.btn-good  { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.4); color: var(--good); }
-.btn-easy  { background: rgba(108,158,255,0.15); border-color: rgba(108,158,255,0.45); color: var(--accent); }
-.btn-again small, .btn-hard small, .btn-good small, .btn-easy small {
-  display: block; font-size: 10px; opacity: 0.75; font-weight: 400; margin-top: 2px;
-}
-.btn-stack { display: flex; flex-direction: column; align-items: center; }
-.bar { height: 6px; background: var(--card2); border-radius: 999px; overflow: hidden; margin-top: 8px; }
-.bar .fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.3s; }
-.quiz-q { text-align: center; padding: 24px 12px; }
-.quiz-q .big { font-size: 84px; font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; line-height: 1; }
-.quiz-q .prompt { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
-.opts { display: grid; gap: 10px; }
-.opt {
-  padding: 16px; border-radius: 12px; border: 1px solid var(--border);
-  background: var(--card2); color: var(--text); font-family: inherit; font-size: 16px;
-  cursor: pointer; text-align: left;
-}
-.opt.correct { background: rgba(74,222,128,0.15); border-color: var(--good); color: var(--good); }
-.opt.wrong { background: rgba(248,113,113,0.15); border-color: var(--bad); color: var(--bad); }
-.opt:disabled { cursor: default; opacity: 0.85; }
-.search {
-  width: 100%; padding: 12px 14px; border-radius: 12px;
-  border: 1px solid var(--border); background: var(--card);
-  color: var(--text); font-family: inherit; font-size: 15px; margin-bottom: 12px;
-}
-.search:focus { outline: none; border-color: var(--accent); }
-.klist { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
-.kitem {
-  aspect-ratio: 1; background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; display: flex; align-items: center; justify-content: center;
-  font-size: 30px; font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
-  cursor: pointer; position: relative;
-}
-.kitem .dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
-.kitem[data-status="learning"] .dot { background: var(--warn); }
-.kitem[data-status="review"] .dot { background: var(--good); }
-.kitem[data-status="new"] .dot { background: var(--accent); }
-.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-.stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
-.stat .n { font-size: 26px; font-weight: 700; }
-.stat .l { font-size: 12px; color: var(--muted); margin-top: 2px; }
-h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin: 20px 0 10px; }
-.empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 14px; }
-.empty .big { font-size: 48px; margin-bottom: 8px; opacity: 0.4; }
 .toast {
   position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 80px);
   transform: translateX(-50%) translateY(20px);
@@ -292,24 +324,26 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
 <body>
 <div id="app">
   <header>
-  <button id="menuBtn" aria-label="Меню">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-      <line x1="3" y1="6" x2="21" y2="6"/>
-      <line x1="3" y1="12" x2="21" y2="12"/>
-      <line x1="3" y1="18" x2="21" y2="18"/>
-    </svg>
-  </button>
-  <h1>漢 Kanji Study</h1>
-  <div class="badge" id="headerBadge"></div>
+    <button id="menuBtn" aria-label="Меню">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <h1>漢 Kanji Study</h1>
+    <div class="badge" id="headerBadge"></div>
   </header>
   <main id="view"></main>
   <nav>
+    <button data-tab="home"><span class="ico">🏠</span>Главная</button>
     <button data-tab="study"><span class="ico">📖</span>Учить</button>
-    <button data-tab="quiz"><span class="ico">✅</span>Тест</button>
+    <button data-tab="practice"><span class="ico">🎯</span>Практика</button>
     <button data-tab="browse"><span class="ico">📚</span>Все</button>
-    <button data-tab="stats"><span class="ico">📊</span>Статистика</button>
+    <button data-tab="stats"><span class="ico">📊</span>Стата</button>
   </nav>
 </div>
+<div id="badgePop"></div>
 <div id="drawerOverlay"></div>
 <aside id="drawer">
   <div class="drawer-header">
@@ -318,46 +352,37 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
   </div>
   <div id="levelList"></div>
 </aside>
-<div id="badgePop"></div>
 <div class="toast" id="toast"></div>
 
-<!-- Данные кандзи (генерируются скриптом generate_kanji.py) -->
 <script src="kanji_data.js"></script>
 <script src="warodai_mini.js"></script>
 
 <script>
-/* ====================== ПАРСИНГ ======================
-   Формат строки KANJI_DB: kanji|level|значения|онные|кунные|примеры
-   Примеры: слово:чтение:перевод; слово:чтение:перевод
-====================================================== */
-// Приводит первую букву к верхнему регистру
+/* ====================== УТИЛИТЫ ====================== */
 function capFirst(s) {
   if (!s) return s;
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
-
 function cleanMeaning(s) {
   if (!s) return '';
   let t = String(s);
-  // Нумерация "1) ", "2) ", "12) " — в начале или после пробела
   t = t.replace(/(^|\s)\d+\)\s*/g, '$1');
-  // Множественные пробелы → один
   t = t.replace(/\s+/g, ' ').trim();
-  // Хвостовые точки/запятые/точки с запятой (но не трогаем закрывающую скобку)
   t = t.replace(/^[\s.,;:]+|[\s.,;:]+$/g, '');
   return capFirst(t);
 }
+
+/* ====================== ПАРСИНГ ====================== */
 function parseData(raw) {
   return raw.split('\n').map(line => {
     const parts = line.split('|');
     if (parts.length < 4) return null;
     const [k, level, meanings, on, kun, ex] = parts;
-        const examples = (ex || '').split(';').map(s => {
+    const examples = (ex || '').split(';').map(s => {
       const seg = s.split(':');
       if (seg.length < 2) return null;
       const w = seg[0].trim();
       const r = (seg[1] || '').trim();
-      // Приоритет: Warodai (точное совпадение слово+чтение, потом по слову)
       let m = '';
       if (typeof WARODAI !== 'undefined') {
         m = WARODAI[`${w}:${r}`] || WARODAI[`${w}:`] || '';
@@ -367,12 +392,9 @@ function parseData(raw) {
     }).filter(Boolean);
 
     const kanjiKey = k.trim();
-
-    // Значение кандзи: если Warodai знает кандзи как слово — берём его
     let kanjiMeanings = null;
-    if (typeof WARODAI !== 'undefined') {
-      const wd = WARODAI[`${kanjiKey}:`];
-      if (wd) kanjiMeanings = [cleanMeaning(wd)];
+    if (typeof WARODAI !== 'undefined' && WARODAI[`${kanjiKey}:`]) {
+      kanjiMeanings = [cleanMeaning(WARODAI[`${kanjiKey}:`])];
     }
     if (!kanjiMeanings) {
       kanjiMeanings = meanings.split(',').map(s => cleanMeaning(s.trim())).filter(Boolean);
@@ -391,7 +413,7 @@ function parseData(raw) {
 
 if (typeof KANJI_DB === 'undefined') {
   document.getElementById('view').innerHTML =
-    '<div class="empty"><div class="big">⚠️</div><p>Файл kanji_data.js не найден.<br>Положи его рядом с index.html.</p></div>';
+    '<div class="empty"><div class="big">⚠️</div><p>Файл kanji_data.js не найден.</p></div>';
   throw new Error('KANJI_DB missing');
 }
 
@@ -405,16 +427,17 @@ const LEVEL_COUNTS = LEVELS.reduce((acc, lv) => {
 const TOTAL = DATA.length;
 
 /* ====================== СОСТОЯНИЕ ====================== */
-const STORAGE_KEY = 'kanji-study-v2';
+const STORAGE_KEY = 'kanji-study-v3';
 const state = {
-  progress: {},
+  progress: {},        // { kanji: { interval, ease, reps, lapses, due, status, lastReview, correct, wrong } }
   settings: { newPerDay: 10 },
-  tab: 'study',
+  tab: 'home',
   levelFilter: 'all',
   studyQueue: [],
   studyIndex: 0,
+  session: null,       // сегодняшний флоу: { stage, newStudied: [] }
   quiz: null,
-  history: {}
+  history: {}          // { 'YYYY-MM-DD': count }
 };
 
 function load() {
@@ -449,15 +472,33 @@ const MIN = 60 * 1000;
 function getCard(k) {
   return state.progress[k] || {
     interval: 0, ease: 2.5, reps: 0, lapses: 0,
-    due: 0, status: 'new', lastReview: 0
+    due: 0, status: 'new', lastReview: 0,
+    correct: 0, wrong: 0
   };
 }
 
-function review(k, quality) {
+// Процент изучения кандзи: комбинация точности ответов и зрелости SRS
+function getMastery(c) {
+  if (!c || c.status === 'new') return 0;
+  const correct = c.correct || 0;
+  const wrong = c.wrong || 0;
+  const total = correct + wrong;
+  const acc = total >= 2 ? (correct / total) : 0.5;
+  const maturity = c.interval === 0
+    ? 0.1
+    : Math.min(1, Math.log(c.interval + 1) / Math.log(22));
+  return Math.round((acc * 0.5 + maturity * 0.5) * 100);
+}
+
+function review(k, quality, wasCorrect) {
   const c = { ...getCard(k) };
   const now = Date.now();
   c.reps++;
   c.lastReview = now;
+
+  if (wasCorrect === true) c.correct = (c.correct || 0) + 1;
+  else if (wasCorrect === false) c.wrong = (c.wrong || 0) + 1;
+
   if (quality === 0) {
     c.lapses++;
     c.ease = Math.max(1.3, c.ease - 0.2);
@@ -472,24 +513,31 @@ function review(k, quality) {
     c.due = now + c.interval * DAY;
   }
   state.progress[k] = c;
+
   const today = new Date().toISOString().slice(0, 10);
   state.history[today] = (state.history[today] || 0) + 1;
   save();
 }
 
-/* ====================== ФИЛЬТР ПО УРОВНЮ ====================== */
+/* ====================== ФИЛЬТРЫ И ОЧЕРЕДИ ====================== */
 function byLevel(arr) {
   return state.levelFilter === 'all' ? arr : arr.filter(d => d.level === state.levelFilter);
 }
-function dueCards() {
+function dueCards(pool) {
   const now = Date.now();
-  return byLevel(DATA).filter(d => {
+  const src = pool || byLevel(DATA);
+  return src.filter(d => {
     const c = getCard(d.kanji);
     return c.status !== 'new' && c.due <= now;
   });
 }
-function newCards() {
-  return byLevel(DATA).filter(d => getCard(d.kanji).status === 'new');
+function newCards(pool) {
+  const src = pool || byLevel(DATA);
+  return src.filter(d => getCard(d.kanji).status === 'new');
+}
+function studiedCards(pool) {
+  const src = pool || DATA;
+  return src.filter(d => getCard(d.kanji).status !== 'new');
 }
 function buildStudyQueue() {
   const due = dueCards().sort((a, b) => getCard(a.kanji).due - getCard(b.kanji).due);
@@ -513,7 +561,6 @@ function renderLevelBar() {
       <span class="n">${it.n}</span>
     </button>`).join('');
 }
-
 function openDrawer() {
   renderLevelBar();
   drawer.classList.add('open');
@@ -523,35 +570,23 @@ function closeDrawer() {
   drawer.classList.remove('open');
   drawerOverlay.classList.remove('open');
 }
-
 function setLevel(lv) {
   state.levelFilter = lv;
   state.studyQueue = [];
   state.studyIndex = 0;
-  sessionReviewed = new Set();
+  state.session = null;
   state.quiz = null;
   closeDrawer();
   save(); render();
 }
 
-function render() {
-  document.querySelectorAll('nav button').forEach(b => {
-    b.classList.toggle('active', b.dataset.tab === state.tab);
-  });
-  renderLevelBar();
-  if (state.tab === 'study') renderStudy();
-  if (state.tab === 'quiz') renderQuiz();
-  if (state.tab === 'browse') renderBrowse();
-  if (state.tab === 'stats') renderStats();
-  updateHeaderBadge();
-}
 function calcStreak() {
   let streak = 0;
   const d = new Date();
   for (let i = 0; i < 365; i++) {
     const key = d.toISOString().slice(0, 10);
     if (state.history[key] > 0) { streak++; d.setDate(d.getDate() - 1); }
-    else if (i === 0) { d.setDate(d.getDate() - 1); } // сегодня может быть 0
+    else if (i === 0) { d.setDate(d.getDate() - 1); }
     else break;
   }
   return streak;
@@ -571,55 +606,162 @@ function updateHeaderBadge() {
     <span>🔥 ${streak}</span>`;
 }
 
-function toggleBadgePop() {
-  const pop = document.getElementById('badgePop');
-  if (pop.classList.contains('open')) {
-    pop.classList.remove('open');
-    return;
-  }
-  const due = dueCards().length;
-  const nw = Math.min(newCards().length, state.settings.newPerDay);
-  const today = new Date().toISOString().slice(0, 10);
-  const done = state.history[today] || 0;
-  const streak = calcStreak();
-
-  pop.innerHTML = `
-    <div class="row2">
-      <div class="ico2">📅</div>
-      <div class="txt"><b>${done}</b> — повторено сегодня.<br>Счётчик сбрасывается каждый день.</div>
-    </div>
-    <div class="row2">
-      <div class="ico2">🔔</div>
-      <div class="txt"><b>${due + nw}</b> — ждут изучения сейчас.<br>
-      Просроченных к повтору: <b>${due}</b>, новых на сегодня: <b>${nw}</b>.</div>
-    </div>
-    <div class="row2">
-      <div class="ico2">🔥</div>
-      <div class="txt"><b>${streak}</b> — дней подряд.<br>
-      ${streak === 0 ? 'Начни заниматься, чтобы зажечь огонь.' :
-        streak === 1 ? 'Один день — хорошее начало!' :
-        'Продолжай в том же духе!'}</div>
-    </div>`;
-  pop.classList.add('open');
+function render() {
+  document.querySelectorAll('nav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === state.tab);
+  });
+  if (state.tab === 'home') renderHome();
+  if (state.tab === 'study') renderStudy();
+  if (state.tab === 'practice') renderPractice();
+  if (state.tab === 'browse') renderBrowse();
+  if (state.tab === 'stats') renderStats();
+  updateHeaderBadge();
 }
 
-// Закрытие по тапу вне попапа
-document.addEventListener('click', e => {
-  const pop = document.getElementById('badgePop');
-  if (!pop || !pop.classList.contains('open')) return;
-  if (pop.contains(e.target) || headerBadge.contains(e.target)) return;
-  pop.classList.remove('open');
-});
+/* ====================== HOME ====================== */
+function renderHome() {
+  const streak = calcStreak();
+  const today = new Date().toISOString().slice(0, 10);
+  const todayCount = state.history[today] || 0;
 
-/* ---------------- STUDY ---------------- */
+  // Календарь на 35 дней
+  const cells = [];
+  const now = new Date();
+  for (let i = 34; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const c = state.history[key] || 0;
+    let lvl = 0;
+    if (c > 0 && c <= 5) lvl = 1;
+    else if (c <= 15) lvl = 2;
+    else if (c <= 30) lvl = 3;
+    else if (c > 30) lvl = 4;
+    const isToday = key === today;
+    cells.push(`<div class="cal-cell" data-lvl="${lvl}" ${isToday ? 'title="Сегодня"' : ''} class2="${isToday?'today':''}" ${isToday ? 'style="box-shadow:0 0 0 1.5px var(--warn)"' : ''}></div>`);
+  }
+
+  // Прогресс по уровням
+  const levelProg = LEVELS.map(lv => {
+    const inLv = DATA.filter(d => d.level === lv);
+    const done = inLv.filter(d => getCard(d.kanji).status !== 'new').length;
+    const pct = inLv.length ? Math.round(done / inLv.length * 100) : 0;
+    return `
+      <div style="margin-bottom:12px;">
+        <div class="level-prog">
+          <span class="name">${lv}</span>
+          <span class="pct"><b>${pct}%</b> · ${done}/${inLv.length}</span>
+        </div>
+        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+      </div>`;
+  }).join('');
+
+  // Сколько новых доступно сегодня
+  const newAvail = Math.min(newCards().length, state.settings.newPerDay);
+  const dueAvail = dueCards().length;
+  const totalToday = newAvail + dueAvail;
+
+  view.innerHTML = `
+    <div class="home-hero">
+      <div class="streak-num">🔥 ${streak}</div>
+      <div class="streak-lbl">${streak === 0 ? 'Начни заниматься сегодня' :
+        streak === 1 ? 'день подряд' :
+        streak < 5 ? 'дня подряд' : 'дней подряд'}</div>
+      <div class="calendar">${cells.join('')}</div>
+      <div class="cal-legend">
+        <span>меньше</span>
+        <span class="sw" style="background:var(--card2);border:1px solid var(--border);"></span>
+        <span class="sw" style="background:rgba(108,158,255,0.25);"></span>
+        <span class="sw" style="background:rgba(108,158,255,0.5);"></span>
+        <span class="sw" style="background:rgba(108,158,255,0.75);"></span>
+        <span class="sw" style="background:var(--accent);"></span>
+        <span>больше</span>
+      </div>
+    </div>
+
+    <button class="big-cta" onclick="startToday()">
+      📚 Сегодняшние кандзи
+      <span class="sub">${totalToday > 0 ? `${dueAvail} повтор · ${newAvail} новых` : 'Всё сделано на сегодня'}</span>
+    </button>
+
+    <h2>Прогресс по уровням</h2>
+    <div class="card">${levelProg}</div>
+
+    <h2>Сегодня</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="n">${todayCount}</div><div class="l">Повторено</div></div>
+      <div class="stat"><div class="n">${dueAvail}</div><div class="l">К повтору</div></div>
+    </div>`;
+}
+
+/* ====================== СЕГОДНЯШНИЙ ФЛОУ ====================== */
+function startToday() {
+  const studied = studiedCards();
+  const newAvail = newCards().slice(0, state.settings.newPerDay);
+  const due = dueCards().slice(0, 10);
+
+  // Формируем: повтор (до 10) + новые
+  let reviewItems = [];
+  if (due.length > 0) {
+    reviewItems = shuffle(due).slice(0, 10);
+  } else if (studied.length >= 10) {
+    reviewItems = shuffle(studied).slice(0, 10);
+  } else if (studied.length > 0) {
+    reviewItems = shuffle(studied);
+  }
+
+  state.session = {
+    stage: null,
+    newStudied: [],
+    newAvailCount: newAvail.length
+  };
+
+  if (reviewItems.length > 0) {
+    state.session.stage = 'review';
+    startQuiz(reviewItems, 'mixed', 'today-review');
+  } else if (newAvail.length > 0) {
+    state.session.stage = 'study';
+    state.studyQueue = buildStudyQueue();
+    state.studyIndex = 0;
+    state.tab = 'study';
+    render();
+  } else {
+    toast('Нет кандзи для изучения');
+    state.session = null;
+  }
+}
+
+/* ====================== STUDY ====================== */
 function renderStudy() {
   if (state.studyQueue.length === 0) {
     state.studyQueue = buildStudyQueue();
     state.studyIndex = 0;
   }
+
   if (state.studyIndex >= state.studyQueue.length) {
     const today = new Date().toISOString().slice(0, 10);
     const done = state.history[today] || 0;
+    const inSession = state.session && state.session.stage === 'study';
+
+    if (inSession) {
+      // Конец изучения в сегодняшнем флоу → переход к тесту по новым
+      const studied = state.studyQueue.filter(d => getCard(d.kanji).status !== 'new');
+      state.session.newStudied = studied;
+      state.session.stage = 'quiz';
+      state.studyQueue = [];
+      state.studyIndex = 0;
+      if (studied.length > 0) {
+        startQuiz(shuffle(studied), 'mixed', 'today-quiz-new');
+        state.tab = 'practice';
+        render();
+      } else {
+        state.session = null;
+        state.tab = 'home';
+        render();
+      }
+      return;
+    }
+
     view.innerHTML = `
       <div class="empty">
         <div class="big">🎉</div>
@@ -633,11 +775,12 @@ function renderStudy() {
   const d = state.studyQueue[state.studyIndex];
   const c = getCard(d.kanji);
   const statusLabel = { new: 'Новая', learning: 'Учится', review: 'Повтор' }[c.status];
+  const mastery = getMastery(c);
 
   view.innerHTML = `
-    <div class="card flashcard" style="min-height:auto;">
-      <div class="kanji" style="font-size:96px; margin-bottom:8px;">${d.kanji}</div>
-      <div class="hint" style="margin-bottom:14px;">${statusLabel} · ${d.level}</div>
+    <div class="card flashcard">
+      <div class="kanji">${d.kanji}</div>
+      <div class="hint">${statusLabel} · ${d.level} · ${mastery}%</div>
       <div class="back">
         <div class="meanings">${d.meanings.join(', ')}</div>
         ${d.on.length ? `<div class="row"><span class="label">On</span><span class="val">${d.on.join('、')}</span></div>` : ''}
@@ -660,74 +803,76 @@ function renderStudy() {
       ${state.studyIndex + 1} / ${state.studyQueue.length}
     </div>`;
 }
-function nextIntervalLabel(k, q) {
-  const c = getCard(k);
-  let interval;
-  if (q === 0) return '<1м';
-  if (q === 1) interval = c.interval === 0 ? 1 : Math.max(1, c.interval * 1.2);
-  else if (q === 2) interval = c.interval === 0 ? 1 : c.interval * c.ease;
-  else interval = c.interval === 0 ? 3 : c.interval * c.ease * 1.3;
-  if (interval < 1) return '<1д';
-  if (interval < 30) return Math.round(interval) + 'д';
-  if (interval < 365) return Math.round(interval / 30) + 'м';
-  return (interval / 365).toFixed(1) + 'г';
-}
 
-// Отслеживаем, что уже оценили в этой сессии, чтобы не дублировать
 let sessionReviewed = new Set();
 
 function nextCard() {
   const d = state.studyQueue[state.studyIndex];
   if (!sessionReviewed.has(d.kanji)) {
-    // Автоматически помечаем как "Норм" при первом проходе
-    review(d.kanji, 2);
+    review(d.kanji, 2, undefined);
     sessionReviewed.add(d.kanji);
   }
   state.studyIndex++;
-  state.studyFlipped = false;
   renderStudy();
   updateHeaderBadge();
 }
-
 function prevCard() {
   if (state.studyIndex === 0) return;
   state.studyIndex--;
-  state.studyFlipped = true; // возвращаемся к открытой карточке
   renderStudy();
 }
-
 function rebuildStudy() {
   state.studyQueue = buildStudyQueue();
   state.studyIndex = 0;
-  state.studyFlipped = false;
   sessionReviewed = new Set();
   renderStudy();
 }
 
-/* ---------------- QUIZ ---------------- */
-function renderQuiz() {
+/* ====================== PRACTICE (объединённый тест) ====================== */
+function renderPractice() {
   if (!state.quiz) {
-    const pool = byLevel(DATA).filter(d => getCard(d.kanji).status !== 'new');
+    const pool = studiedCards();
+    const newAvail = Math.min(newCards().length, state.settings.newPerDay);
     view.innerHTML = `
-      <h2>Режим теста · ${state.levelFilter === 'all' ? 'все уровни' : state.levelFilter}</h2>
-      <div class="card" style="padding:0; overflow:hidden;">
-        <button class="btn" style="width:100%; border:0; border-radius:0; padding:18px; justify-content:flex-start;" onclick="startQuiz('kanji2meaning')">🈁 Кандзи → Значение</button>
-        <button class="btn" style="width:100%; border:0; border-radius:0; border-top:1px solid var(--border); padding:18px; justify-content:flex-start;" onclick="startQuiz('kanji2reading')">🗣️ Кандзи → Чтение (kun)</button>
-        <button class="btn" style="width:100%; border:0; border-radius:0; border-top:1px solid var(--border); padding:18px; justify-content:flex-start;" onclick="startQuiz('meaning2kanji')">🔎 Значение → Кандзи</button>
+      <h2>Практика</h2>
+      <div class="card" style="padding:16px 20px;">
+        <div style="color:var(--muted); font-size:13px; line-height:1.6;">
+          Смешанный тест по всем изученным кандзи.<br>
+          Вопросы выбираются случайно: значение → кандзи, кандзи → значение, кандзи → чтение.
+        </div>
       </div>
+      <button class="big-cta" onclick="startPractice()">
+        🎯 Начать практику
+        <span class="sub">${pool.length} кандзи изучено</span>
+      </button>
       <p style="color:var(--muted); font-size:12px; text-align:center; margin-top:16px;">
-        Доступно для теста: ${pool.length} кандзи.
+        Тест берёт до 20 случайных кандзи из всех уровней.
       </p>`;
     return;
   }
+
   const q = state.quiz;
   const item = q.item;
-  if (q.mode === 'kanji2meaning' || q.mode === 'kanji2reading') {
-    const prompt = q.mode === 'kanji2meaning' ? 'Что значит этот кандзи?' : 'Кунное чтение?';
+  const modeLabel = {
+    kanji2meaning: 'Что значит этот кандзи?',
+    kanji2reading: 'Кунное чтение?',
+    meaning2kanji: 'Выбери кандзи'
+  }[q.currentMode];
+
+  if (q.currentMode === 'kanji2meaning' || q.currentMode === 'kanji2reading') {
+    const readings = q.currentMode === 'kanji2reading'
+      ? item.kun
+      : [...item.on, ...item.kun];
     view.innerHTML = `
       <div class="card quiz-q">
-        <div class="prompt">${prompt}</div>
-        <div class="big">${item.kanji}</div>
+        <div class="prompt">${modeLabel}</div>
+        <div class="big" onclick="toggleHint()">${item.kanji}</div>
+        <div class="hint-tip">Нажми на кандзи, чтобы увидеть подсказку</div>
+        ${q.hintShown ? `
+          <div class="readings-hint">
+            ${item.on.length ? `<div>On: <b>${item.on.join('、')}</b></div>` : ''}
+            ${item.kun.length ? `<div style="margin-top:4px;">Kun: <b>${item.kun.join('、')}</b></div>` : ''}
+          </div>` : ''}
       </div>
       <div class="opts">
         ${q.options.map((opt, i) => `<button class="opt" ${q.answered ? 'disabled' : ''} data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
@@ -736,9 +881,10 @@ function renderQuiz() {
       <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:12px;">${q.done} / ${q.total} · Правильно: ${q.correct}</div>`;
     return;
   }
+
   view.innerHTML = `
     <div class="card quiz-q">
-      <div class="prompt">Выбери кандзи</div>
+      <div class="prompt">${modeLabel}</div>
       <div style="font-size:22px; font-weight:600; margin:14px 0;">${item.meanings.join(', ')}</div>
     </div>
     <div class="opts">
@@ -747,52 +893,104 @@ function renderQuiz() {
     ${q.answered ? `<button class="btn btn-primary" style="width:100%; margin-top:14px;" onclick="nextQuiz()">Дальше →</button>` : ''}
     <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:12px;">${q.done} / ${q.total} · Правильно: ${q.correct}</div>`;
 }
-function startQuiz(mode) {
-  const pool = shuffle(byLevel(DATA).filter(d => getCard(d.kanji).status !== 'new'));
-  if (pool.length < 4) { toast('Изучи хотя бы 4 кандзи в этом уровне'); return; }
-  // Берём 20 уникальных кандзи, без повторов
-  const selected = pool.slice(0, Math.min(20, pool.length));
+
+function toggleHint() {
+  if (!state.quiz) return;
+  state.quiz.hintShown = !state.quiz.hintShown;
+  renderPractice();
+}
+
+// startQuiz: items — список кандзи, mode — 'mixed' или конкретный, tag — маркер сессии
+function startQuiz(items, mode, tag) {
+  if (!items || items.length === 0) return;
+  const selected = items.slice(0, 20);
   state.quiz = {
-    mode,
-    questions: selected,  // заранее выбранные уникальные кандзи
+    mode: mode || 'mixed',
+    questions: selected,
     total: selected.length,
     done: 0,
     correct: 0,
-    usedDistractors: new Set()  // чтобы дистракторы тоже не повторялись
+    tag: tag || null,
+    currentMode: null,
+    hintShown: false
   };
   nextQuiz();
 }
+
+function startPractice() {
+  const pool = shuffle(studiedCards());
+  if (pool.length < 4) { toast('Изучи хотя бы 4 кандзи'); return; }
+  state.tab = 'practice';
+  state.session = null;
+  startQuiz(pool.slice(0, 20), 'mixed', 'practice');
+  render();
+}
+
+function pickModeFor(item) {
+  const modes = ['kanji2meaning', 'kanji2reading', 'meaning2kanji'];
+  // Если у кандзи нет кунного чтения — исключаем kanji2reading
+  if (!item.kun.length) return modes[Math.floor(Math.random() * 2)];
+  return modes[Math.floor(Math.random() * 3)];
+}
+
 function nextQuiz() {
   const q = state.quiz;
+  if (!q) return;
   if (q.done >= q.total) {
+    const finishedTag = q.tag;
+    const correct = q.correct;
+    const total = q.total;
+    state.quiz = null;
+
+    // Завершение этапа сегодняшнего флоу
+    if (finishedTag === 'today-review') {
+      view.innerHTML = `
+        <div class="empty">
+          <div class="big">✅</div>
+          <p>Повторение завершено!</p>
+          <p style="font-size:16px; margin-top:8px;">${correct} / ${total}</p>
+          <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="continueAfterReview()">Перейти к изучению →</button>
+        </div>`;
+      return;
+    }
+    if (finishedTag === 'today-quiz-new') {
+      view.innerHTML = `
+        <div class="empty">
+          <div class="big">🎉</div>
+          <p>Все задания на сегодня выполнены!</p>
+          <p style="font-size:16px; margin-top:8px;">Тест: ${correct} / ${total}</p>
+          <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="finishToday()">Готово</button>
+        </div>`;
+      return;
+    }
+
     view.innerHTML = `
       <div class="empty">
         <div class="big">🏁</div>
         <p>Тест завершён!</p>
-        <p style="font-size:18px; margin-top:12px;">${q.correct} / ${q.total}</p>
+        <p style="font-size:18px; margin-top:12px;">${correct} / ${total}</p>
         <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="state.quiz=null; render();">Ещё раз</button>
       </div>`;
-    state.quiz = null;
     return;
   }
 
-  // Берём заранее выбранный уникальный кандзи по порядку
   const item = q.questions[q.done];
+  q.currentMode = (q.mode === 'mixed') ? pickModeFor(item) : q.mode;
+  q.hintShown = false;
+
   let correct, key;
-  if (q.mode === 'kanji2meaning') { correct = item.meanings[0]; key = d => d.meanings[0]; }
-  else if (q.mode === 'kanji2reading') { correct = item.kun[0] || item.on[0]; key = d => d.kun[0] || d.on[0]; }
+  if (q.currentMode === 'kanji2meaning') { correct = item.meanings[0]; key = d => d.meanings[0]; }
+  else if (q.currentMode === 'kanji2reading') { correct = item.kun[0] || item.on[0]; key = d => d.kun[0] || d.on[0]; }
   else { correct = item.kanji; key = d => d.kanji; }
 
-  // Дистракторы: 3 разных кандзи, исключаем уже использованные в этом вопросе,
-  // и исключаем возможность повтора одинаковых вариантов
   const others = shuffle(
-    DATA.filter(d => d.kanji !== item.kanji && key(d) !== correct && key(d))
+    DATA.filter(d => d.kanji !== item.kanji && key(d) && key(d) !== correct)
   );
   const seenOptions = new Set([correct]);
   const distractors = [];
   for (const d of others) {
     const opt = key(d);
-    if (!seenOptions.has(opt)) {
+    if (opt && !seenOptions.has(opt)) {
       seenOptions.add(opt);
       distractors.push(opt);
     }
@@ -807,26 +1005,36 @@ function nextQuiz() {
   q.done++;
   render();
 }
+
 function quizAnswer(i) {
   const q = state.quiz;
   if (q.answered) return;
   q.answered = true;
   const chosen = q.options[i];
   const isCorrect = chosen === q.correctText;
-  if (isCorrect) {
-    q.correct++;
-    const c = getCard(q.item.kanji);
-    if (c.status !== 'new') review(q.item.kanji, 2);
+
+  const c = getCard(q.item.kanji);
+  if (c.status !== 'new') {
+    // Уже изученный кандзи — обновляем SRS с учётом правильности
+    review(q.item.kanji, isCorrect ? 2 : 0, isCorrect);
   } else {
-    const c = getCard(q.item.kanji);
-    if (c.status !== 'new') review(q.item.kanji, 0);
+    // Новый — тоже записываем ответ для mastery
+    const c2 = { ...c };
+    c2.correct = (c2.correct || 0) + (isCorrect ? 1 : 0);
+    c2.wrong = (c2.wrong || 0) + (isCorrect ? 0 : 1);
+    state.progress[q.item.kanji] = c2;
+    save();
   }
+
+  if (isCorrect) q.correct++;
+
   document.querySelectorAll('.opt').forEach((el, j) => {
     el.classList.remove('correct', 'wrong');
     if (q.options[j] === q.correctText) el.classList.add('correct');
     else if (j === i) el.classList.add('wrong');
     el.disabled = true;
   });
+
   const btn = document.createElement('button');
   btn.className = 'btn btn-primary';
   btn.style = 'width:100%; margin-top:14px;';
@@ -835,7 +1043,30 @@ function quizAnswer(i) {
   document.querySelector('.opts').after(btn);
 }
 
-/* ---------------- BROWSE ---------------- */
+function continueAfterReview() {
+  const newAvail = newCards().slice(0, state.settings.newPerDay);
+  if (newAvail.length === 0) {
+    toast('Новых кандзи на сегодня нет');
+    state.session = null;
+    state.tab = 'home';
+    render();
+    return;
+  }
+  state.session.stage = 'study';
+  state.studyQueue = buildStudyQueue();
+  state.studyIndex = 0;
+  sessionReviewed = new Set();
+  state.tab = 'study';
+  render();
+}
+
+function finishToday() {
+  state.session = null;
+  state.tab = 'home';
+  render();
+}
+
+/* ====================== BROWSE ====================== */
 let browseQuery = '';
 function renderBrowse() {
   const pool = byLevel(DATA);
@@ -871,14 +1102,15 @@ function renderBrowse() {
 function openDetail(k) {
   const d = BY_KANJI[k];
   const c = getCard(k);
+  const mastery = getMastery(c);
   const dueLabel = c.status === 'new' ? '—' : new Date(c.due).toLocaleDateString('ru-RU');
   view.innerHTML = `
     <button class="btn" style="margin-bottom:14px;" onclick="renderBrowse()">← Назад</button>
     <div class="card flashcard" style="min-height:auto; padding:24px;">
       <div class="kanji" style="font-size:96px;">${d.kanji}</div>
+      <div class="hint">${d.level} · Изучено: ${mastery}%</div>
       <div class="back">
         <div class="meanings">${d.meanings.join(', ')}</div>
-        <div class="row"><span class="label">Ур.</span><span class="val">${d.level}</span></div>
         ${d.on.length ? `<div class="row"><span class="label">On</span><span class="val">${d.on.join('、')}</span></div>` : ''}
         ${d.kun.length ? `<div class="row"><span class="label">Kun</span><span class="val">${d.kun.join('、')}</span></div>` : ''}
         ${d.examples.length ? `<div class="examples">
@@ -889,13 +1121,14 @@ function openDetail(k) {
             </div>`).join('')}
         </div>` : ''}
       </div>
+      <div class="bar" style="width:100%; margin-top:14px;"><div class="fill" style="width:${mastery}%"></div></div>
     </div>
     <div class="card">
       <div class="row"><span class="label">Статус</span><span class="val">${{new:'Новый',learning:'Учится',review:'Повтор'}[c.status]}</span></div>
       <div class="row"><span class="label">Повтор</span><span class="val">${dueLabel}</span></div>
       <div class="row"><span class="label">Интервал</span><span class="val">${c.interval ? c.interval.toFixed(1) + ' дн.' : '—'}</span></div>
+      <div class="row"><span class="label">Ответы</span><span class="val">✅ ${c.correct || 0} · ❌ ${c.wrong || 0}</span></div>
       <div class="row"><span class="label">Ease</span><span class="val">${c.ease.toFixed(2)}</span></div>
-      <div class="row"><span class="label">Реп.</span><span class="val">${c.reps} (ошибок: ${c.lapses})</span></div>
     </div>
     <div class="card">
       <div style="color:var(--muted); font-size:12px; margin-bottom:10px;">Пропиши кандзи пальцем:</div>
@@ -924,7 +1157,7 @@ function initCanvas() {
   c.addEventListener('mousedown', e => { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
   c.addEventListener('mousemove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); });
   c.addEventListener('mouseup', e => { drawing = false; e.preventDefault(); });
-  c.addEventListener('mouseleave', e => { drawing = false; });
+  c.addEventListener('mouseleave', () => { drawing = false; });
   c.addEventListener('touchstart', e => { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }, { passive: false });
   c.addEventListener('touchmove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }, { passive: false });
   c.addEventListener('touchend', e => { drawing = false; e.preventDefault(); });
@@ -935,7 +1168,7 @@ function clearCanvas() {
   c.getContext('2d').clearRect(0, 0, c.width, c.height);
 }
 
-/* ---------------- STATS ---------------- */
+/* ====================== STATS ====================== */
 function renderStats() {
   const pool = byLevel(DATA);
   let n = 0, l = 0, r = 0;
@@ -945,25 +1178,24 @@ function renderStats() {
   });
   const today = new Date().toISOString().slice(0, 10);
   const todayCount = state.history[today] || 0;
-  let streak = 0;
-  const d = new Date();
-  for (let i = 0; i < 365; i++) {
-    const key = d.toISOString().slice(0, 10);
-    if (state.history[key] > 0) { streak++; d.setDate(d.getDate() - 1); }
-    else if (i === 0) { d.setDate(d.getDate() - 1); }
-    else break;
-  }
+  const streak = calcStreak();
   const totalReviews = Object.values(state.history).reduce((a, b) => a + b, 0);
   const studiedPct = pool.length ? ((pool.length - n) / pool.length * 100).toFixed(0) : 0;
   const levelLabel = state.levelFilter === 'all' ? 'Все уровни' : state.levelFilter;
+
+  // Средний mastery изученных кандзи
+  const studiedCardsInPool = pool.filter(d => getCard(d.kanji).status !== 'new');
+  const avgMastery = studiedCardsInPool.length
+    ? Math.round(studiedCardsInPool.reduce((sum, d) => sum + getMastery(getCard(d.kanji)), 0) / studiedCardsInPool.length)
+    : 0;
 
   view.innerHTML = `
     <h2>Прогресс · ${levelLabel}</h2>
     <div class="stat-grid">
       <div class="stat"><div class="n">${r + l}</div><div class="l">Изучено</div><div class="bar"><div class="fill" style="width:${studiedPct}%"></div></div></div>
+      <div class="stat"><div class="n">${avgMastery}%</div><div class="l">Средний уровень</div></div>
       <div class="stat"><div class="n">${todayCount}</div><div class="l">Повторено сегодня</div></div>
-      <div class="stat"><div class="n">${streak}</div><div class="l">Дней подряд</div></div>
-      <div class="stat"><div class="n">${totalReviews}</div><div class="l">Всего повторений</div></div>
+      <div class="stat"><div class="n">🔥 ${streak}</div><div class="l">Дней подряд</div></div>
     </div>
     <h2>По статусам</h2>
     <div class="stat-grid">
@@ -972,14 +1204,14 @@ function renderStats() {
       <div class="stat"><div class="n" style="color:var(--good)">${r}</div><div class="l">В повторе</div></div>
       <div class="stat"><div class="n">${dueCards().length}</div><div class="l">К повтору</div></div>
     </div>
-    <h2>По уровням (всего изучено)</h2>
+    <h2>По уровням</h2>
     <div class="card">
       ${LEVELS.map(lv => {
         const inLv = DATA.filter(d => d.level === lv);
         const done = inLv.filter(d => getCard(d.kanji).status !== 'new').length;
         const pct = inLv.length ? (done / inLv.length * 100).toFixed(0) : 0;
         return `<div style="margin-bottom:10px;">
-          <div style="display:flex; justify-content:space-between; font-size:13px;"><span>${lv}</span><span style="color:var(--muted)">${done} / ${inLv.length}</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:13px;"><span>${lv}</span><span style="color:var(--muted)">${done} / ${inLv.length} · ${pct}%</span></div>
           <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
         </div>`;
       }).join('')}
@@ -997,13 +1229,14 @@ function renderStats() {
     </div>
     <h2>Данные</h2>
     <div class="card">
-      <button class="btn" style="width:100%;" onclick="exportProgress()">📤 Экспорт прогресса (JSON)</button>
+      <button class="btn" style="width:100%;" onclick="exportProgress()">📤 Экспорт прогресса</button>
       <button class="btn" style="width:100%; margin-top:8px;" onclick="document.getElementById('importFile').click()">📥 Импорт прогресса</button>
       <input type="file" id="importFile" accept="application/json" style="display:none;" onchange="importProgress(event)">
       <button class="btn" style="width:100%; margin-top:8px; color:var(--bad); border-color:rgba(248,113,113,0.4);" onclick="resetAll()">🗑️ Сбросить всё</button>
     </div>
     <p style="color:var(--muted); font-size:11px; text-align:center; margin-top:20px;">
-      Данные хранятся только в этом браузере (localStorage).<br>Делай экспорт, чтобы не потерять прогресс.
+      Всего повторений: ${totalReviews}<br>
+      Данные хранятся в браузере. Делай экспорт, чтобы не потерять прогресс.
     </p>`;
 }
 function changeNew(d) { state.settings.newPerDay = Math.max(0, state.settings.newPerDay + d); save(); render(); }
@@ -1011,8 +1244,9 @@ function resetAll() {
   if (!confirm('Удалить весь прогресс? Это необратимо.')) return;
   localStorage.removeItem(STORAGE_KEY);
   state.progress = {}; state.history = {};
-  state.studyQueue = []; state.studyIndex = 0; state.studyFlipped = false;
-  state.quiz = null;
+  state.studyQueue = []; state.studyIndex = 0;
+  state.session = null; state.quiz = null;
+  sessionReviewed = new Set();
   render();
 }
 function exportProgress() {
@@ -1038,7 +1272,8 @@ function importProgress(ev) {
       state.levelFilter = d.levelFilter || 'all';
       state.history = d.history || {};
       save();
-      state.studyQueue = []; state.studyIndex = 0; state.studyFlipped = false;
+      state.studyQueue = []; state.studyIndex = 0;
+      state.session = null; state.quiz = null;
       render();
       toast('Импортировано');
     } catch (err) { alert('Не удалось прочитать файл: ' + err.message); }
@@ -1046,7 +1281,7 @@ function importProgress(ev) {
   reader.readAsText(file);
 }
 
-/* ---------------- UTILS ---------------- */
+/* ====================== UTILS ====================== */
 function shuffle(a) {
   const r = [...a];
   for (let i = r.length - 1; i > 0; i--) {
@@ -1064,102 +1299,103 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
 }
 
-/* ---------------- INIT ---------------- */
+/* ====================== BADGE POPUP ====================== */
+function toggleBadgePop() {
+  const pop = document.getElementById('badgePop');
+  if (pop.classList.contains('open')) {
+    pop.classList.remove('open');
+    return;
+  }
+  const due = dueCards().length;
+  const nw = Math.min(newCards().length, state.settings.newPerDay);
+  const today = new Date().toISOString().slice(0, 10);
+  const done = state.history[today] || 0;
+  const streak = calcStreak();
+  pop.innerHTML = `
+    <div class="row2">
+      <div class="ico2">📅</div>
+      <div class="txt"><b>${done}</b> — повторено сегодня.<br>Счётчик сбрасывается каждый день.</div>
+    </div>
+    <div class="row2">
+      <div class="ico2">🔔</div>
+      <div class="txt"><b>${due + nw}</b> — ждут изучения сейчас.<br>
+      Просроченных: <b>${due}</b>, новых: <b>${nw}</b>.</div>
+    </div>
+    <div class="row2">
+      <div class="ico2">🔥</div>
+      <div class="txt"><b>${streak}</b> — дней подряд.</div>
+    </div>`;
+  pop.classList.add('open');
+}
+document.addEventListener('click', e => {
+  const pop = document.getElementById('badgePop');
+  if (!pop || !pop.classList.contains('open')) return;
+  if (pop.contains(e.target) || headerBadge.contains(e.target)) return;
+  pop.classList.remove('open');
+});
+
+/* ====================== INIT ====================== */
 document.querySelectorAll('nav button').forEach(b => {
   b.addEventListener('click', () => {
     state.tab = b.dataset.tab;
-    if (state.tab !== 'quiz') state.quiz = null;
+    if (state.tab !== 'practice') state.quiz = null;
     render();
   });
 });
-/* Меню */
 document.getElementById('menuBtn').addEventListener('click', openDrawer);
 document.getElementById('drawerClose').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
+headerBadge.addEventListener('click', e => { e.stopPropagation(); toggleBadgePop(); });
 
-// Свайп влево, чтобы закрыть
 let touchStartX = 0;
-drawer.addEventListener('touchstart', e => {
-  touchStartX = e.touches[0].clientX;
-}, { passive: true });
+drawer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
 drawer.addEventListener('touchend', e => {
   const dx = e.changedTouches[0].clientX - touchStartX;
   if (dx < -60) closeDrawer();
 }, { passive: true });
-headerBadge.addEventListener('click', e => {
-  e.stopPropagation();
-  toggleBadgePop();
-});
+
 load();
 render();
 </script>
 
-<!-- ====================== PWA ====================== -->
+<!-- PWA -->
 <script>
-/* Регистрация Service Worker */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
       .then(reg => {
-        console.log('SW зарегистрирован:', reg.scope);
         reg.addEventListener('updatefound', () => {
-          const newWorker = reg.installing;
-          newWorker?.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              showUpdateToast();
-            }
+          const nw = reg.installing;
+          nw?.addEventListener('statechange', () => {
+            if (nw.state === 'installed' && navigator.serviceWorker.controller) showUpdateToast();
           });
         });
       })
-      .catch(err => console.warn('SW не зарегистрирован:', err));
+      .catch(err => console.warn('SW:', err));
   });
 }
-
-/* Кнопка установки приложения */
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
   showInstallBanner();
 });
-
-window.addEventListener('appinstalled', () => {
-  deferredPrompt = null;
-  hideInstallBanner();
-  toast('Приложение установлено 🎉');
-});
-
-if (window.matchMedia('(display-mode: standalone)').matches ||
-    window.navigator.standalone === true) {
+window.addEventListener('appinstalled', () => { deferredPrompt = null; hideInstallBanner(); toast('Установлено 🎉'); });
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
   document.documentElement.dataset.pwa = 'true';
 }
-
 function showInstallBanner() {
   if (document.getElementById('installBanner')) return;
   const el = document.createElement('div');
   el.id = 'installBanner';
   el.innerHTML = `
-    <div style="
-      position: fixed; left: 12px; right: 12px;
-      bottom: calc(env(safe-area-inset-bottom) + 70px);
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 16px; padding: 12px 14px;
-      display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 90;">
-      <div style="font-size: 28px;">📱</div>
-      <div style="flex: 1; font-size: 13px;">
-        Установить Kanji Study как приложение?
-      </div>
-      <button id="installYes" style="
-        background: var(--accent); color: #0b1020; border: 0;
-        padding: 8px 14px; border-radius: 10px; font-weight: 600;
-        font-family: inherit; cursor: pointer;">Да</button>
-      <button id="installNo" style="
-        background: transparent; color: var(--muted); border: 0;
-        padding: 8px; font-family: inherit; cursor: pointer;">✕</button>
+    <div style="position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 70px);background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:90;">
+      <div style="font-size:28px;">📱</div>
+      <div style="flex:1;font-size:13px;">Установить Kanji Study?</div>
+      <button id="installYes" style="background:var(--accent);color:#0b1020;border:0;padding:8px 14px;border-radius:10px;font-weight:600;font-family:inherit;cursor:pointer;">Да</button>
+      <button id="installNo" style="background:transparent;color:var(--muted);border:0;padding:8px;font-family:inherit;cursor:pointer;">✕</button>
     </div>`;
   document.body.appendChild(el);
-
   document.getElementById('installYes').onclick = async () => {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
@@ -1169,31 +1405,15 @@ function showInstallBanner() {
   };
   document.getElementById('installNo').onclick = hideInstallBanner;
 }
-
-function hideInstallBanner() {
-  document.getElementById('installBanner')?.remove();
-}
-
+function hideInstallBanner() { document.getElementById('installBanner')?.remove(); }
 function showUpdateToast() {
   if (document.getElementById('updateToast')) return;
   const el = document.createElement('div');
   el.id = 'updateToast';
   el.innerHTML = `
-    <div style="
-      position: fixed; left: 50%; transform: translateX(-50%);
-      bottom: calc(env(safe-area-inset-bottom) + 80px);
-      background: var(--accent); color: #0b1020;
-      padding: 12px 18px; border-radius: 999px;
-      font-size: 13px; font-weight: 600; z-index: 95;
-      box-shadow: 0 8px 24px rgba(108,158,255,0.4);
-      display: flex; align-items: center; gap: 10px;">
+    <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 80px);background:var(--accent);color:#0b1020;padding:12px 18px;border-radius:999px;font-size:13px;font-weight:600;z-index:95;box-shadow:0 8px 24px rgba(108,158,255,0.4);display:flex;align-items:center;gap:10px;">
       <span>Доступно обновление</span>
-      <button id="reloadBtn" style="
-        background: #0b1020; color: var(--accent); border: 0;
-        padding: 6px 12px; border-radius: 999px;
-        font-family: inherit; font-weight: 600; cursor: pointer;">
-        Обновить
-      </button>
+      <button id="reloadBtn" style="background:#0b1020;color:var(--accent);border:0;padding:6px 12px;border-radius:999px;font-family:inherit;font-weight:600;cursor:pointer;">Обновить</button>
     </div>`;
   document.body.appendChild(el);
   document.getElementById('reloadBtn').onclick = () => {
