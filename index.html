@@ -397,7 +397,7 @@ function parseData(raw) {
       examples = BKB[kanjiKey].ex.map(s => ({ raw: s }));
     }
 
-    // ПРИОРИТЕТ 2: kanji_data + WARODAI
+    // ПРИОРИТЕТ 2: kanji_data + WARODAI — но уже в книжном формате
     if (examples.length === 0) {
       examples = (ex || '').split(';').map(s => {
         const seg = s.split(':');
@@ -411,7 +411,8 @@ function parseData(raw) {
         if (!m) m = seg.slice(2).join(':').trim();
         m = cleanMeaning(m);
         if (!isMeaningValid(m)) m = '—';
-        return w ? { word: w, reading: r, meaning: m } : null;
+        // Формируем raw-строку в книжном формате: слово(чтение) перевод
+        return w ? { raw: `${w}(${r}) ${m}` } : null;
       }).filter(Boolean);
     }
 
