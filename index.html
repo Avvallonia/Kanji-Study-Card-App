@@ -210,6 +210,12 @@ h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: upp
 }
 .big-cta:active { transform: scale(0.985); }
 .big-cta .sub { font-size: 12px; font-weight: 500; opacity: 0.75; margin-top: 6px; }
+.big-cta.dim {
+  background: linear-gradient(135deg, #2d3748, #1a202c);
+  color: var(--muted);
+  box-shadow: none;
+}
+.big-cta.dim .sub { opacity: 1; }
 #drawerOverlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
   opacity: 0; pointer-events: none; transition: opacity 0.2s;
@@ -377,12 +383,7 @@ function isMeaningValid(s) {
   return true;
 }
 
-/* ====================== ПАРСИНГ ======================
-   Формат kanji_data.js: kanji|level|значения|онные|кунные|примеры
-   BKB: кандзи → { m, ex }
-   KANJI_RU: кандзи → строка
-   WARODAI: "слово:чтение" → перевод
-====================================================== */
+/* ====================== ПАРСИНГ ====================== */
 function parseData(raw) {
   return raw.split('\n').map(line => {
     const parts = line.split('|');
@@ -398,7 +399,7 @@ function parseData(raw) {
       examples = BKB[kanjiKey].ex.map(s => ({ raw: s }));
     }
 
-    // ПРИОРИТЕТ 2: kanji_data + WARODAI — но уже в книжном формате
+    // ПРИОРИТЕТ 2: kanji_data + WARODAI — приводим к книжному виду
     if (examples.length === 0) {
       examples = (ex || '').split(';').map(s => {
         const seg = s.split(':');
@@ -412,7 +413,6 @@ function parseData(raw) {
         if (!m) m = seg.slice(2).join(':').trim();
         m = cleanMeaning(m);
         if (!isMeaningValid(m)) m = '—';
-        // Формируем raw-строку в книжном формате: слово(чтение) перевод
         return w ? { raw: `${w}(${r}) ${m}` } : null;
       }).filter(Boolean);
     }
@@ -426,7 +426,7 @@ function parseData(raw) {
       if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
     }
 
-    // ПРИОРИТЕТ 2: KANJI_RU
+    // ПРИОРИТЕТ 2: KANJI_RU (переводы из Google)
     if (!kanjiMeanings && typeof KANJI_RU !== 'undefined' && KANJI_RU[kanjiKey]) {
       const cleaned = cleanMeaning(KANJI_RU[kanjiKey]);
       if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
@@ -468,7 +468,6 @@ const LEVEL_COUNTS = LEVELS.reduce((acc, lv) => {
   return acc;
 }, {});
 const TOTAL = DATA.length;
-// Кандзи, которые есть в Basic Kanji Book
 const BKB_COUNT = (typeof BKB !== 'undefined')
   ? DATA.filter(d => BKB[d.kanji]).length
   : 0;
@@ -590,7 +589,7 @@ function studiedCards(pool) {
 }
 function buildStudyQueue() {
   const due = dueCards().sort((a, b) => getCard(a.kanji).due - getCard(b.kanji).due);
-  const nw = newCards().slice(0, state.settings.newPerDay);
+  const nw = shuffle(newCards()).slice(0, state.settings.newPerDay);
   return [...due, ...nw];
 }
 
@@ -645,7 +644,7 @@ function calcStreak() {
   return streak;
 }
 
-function updateHeaderBadge() { /* удалено — счётчик убран */ }
+function updateHeaderBadge() { /* удалено */ }
 
 function render() {
   document.querySelectorAll('nav button').forEach(b => {
@@ -667,7 +666,7 @@ function renderHome() {
   const todayNew = state.historyNew[today] || 0;
   const todayReviews = Math.max(0, todayTotal - todayNew);
 
-  // Календарь на 35 дней — кружки (пустой / красный)
+  // Календарь на 35 дней
   const cells = [];
   const now = new Date();
   for (let i = 34; i >= 0; i--) {
@@ -680,7 +679,24 @@ function renderHome() {
     cells.push(`<div class="cal-cell" data-lvl="${filled}" ${isToday ? 'style="box-shadow:0 0 0 2px var(--warn)"' : ''}></div>`);
   }
 
-  const levelProg = LEVELS.map(lv => {
+  // Полоса прогресса BKB
+  let bkbProg = '';
+  if (typeof BKB !== 'undefined' && BKB_COUNT > 0) {
+    const bkbCards = DATA.filter(d => BKB[d.kanji]);
+    const bkbDone = bkbCards.filter(d => getCard(d.kanji).status !== 'new').length;
+    const bkbPct = bkbCards.length ? Math.round(bkbDone / bkbCards.length * 100) : 0;
+    bkbProg = `
+      <div style="margin-bottom:12px;">
+        <div class="level-prog">
+          <span class="name">📖 BKB</span>
+          <span class="pct"><b>${bkbPct}%</b> · ${bkbDone}/${bkbCards.length}</span>
+        </div>
+        <div class="bar"><div class="fill" style="width:${bkbPct}%"></div></div>
+      </div>`;
+  }
+
+  // Прогресс по уровням JLPT
+  const levelProg = bkbProg + LEVELS.map(lv => {
     const inLv = DATA.filter(d => d.level === lv);
     const done = inLv.filter(d => getCard(d.kanji).status !== 'new').length;
     const pct = inLv.length ? Math.round(done / inLv.length * 100) : 0;
@@ -694,14 +710,19 @@ function renderHome() {
       </div>`;
   }).join('');
 
-  const newAvail = Math.min(newCards().length, state.settings.newPerDay);
-  const dueAvail = dueCards().length;
-  const remainingNew = newCards().length;
-
+  // Кнопка
   let ctaSubtitle;
-  if (newAvail > 0) ctaSubtitle = `${newAvail} новых`;
-  else if (remainingNew > 0) ctaSubtitle = 'Все на сегодня изучены';
-  else ctaSubtitle = 'Все кандзи изучены';
+  let ctaDim = false;
+  if (todayNew > 0) {
+    ctaSubtitle = 'Сегодня нет новых кандзи';
+    ctaDim = true;
+  } else {
+    const newAvail = Math.min(newCards().length, state.settings.newPerDay);
+    const remainingNew = newCards().length;
+    if (newAvail > 0) ctaSubtitle = `${newAvail} новых`;
+    else if (remainingNew > 0) ctaSubtitle = 'Все на сегодня изучены';
+    else ctaSubtitle = 'Все кандзи изучены';
+  }
 
   view.innerHTML = `
     <div class="home-hero">
@@ -718,7 +739,7 @@ function renderHome() {
       </div>
     </div>
 
-    <button class="big-cta" onclick="startToday()">
+    <button class="big-cta ${ctaDim ? 'dim' : ''}" onclick="startToday()">
       📚 Сегодняшние кандзи
       <span class="sub">${ctaSubtitle}</span>
     </button>
@@ -735,52 +756,49 @@ function renderHome() {
 
 /* ====================== СЕГОДНЯШНИЙ ФЛОУ ====================== */
 function startToday() {
-  const studied = studiedCards();
-  const newAvail = Math.min(newCards().length, state.settings.newPerDay);
-  const due = dueCards().slice(0, 10);
+  const today = new Date().toISOString().slice(0, 10);
+  const todayNew = state.historyNew[today] || 0;
 
-  if (due.length > 0 || newAvail > 0) {
-    let reviewItems = [];
-    if (due.length > 0) {
-      reviewItems = shuffle(due).slice(0, 10);
-    } else if (studied.length >= 10) {
-      reviewItems = shuffle(studied).slice(0, 10);
-    } else if (studied.length > 0) {
-      reviewItems = shuffle(studied);
-    }
-
-    state.session = { stage: null, newStudied: [], newAvailCount: newAvail };
-
-    if (due.length > 0 && reviewItems.length > 0) {
-      state.session.stage = 'review';
-      state.tab = 'practice';
-      startQuiz(reviewItems, 'mixed', 'today-review');
-      render();
-    } else if (newAvail > 0) {
-      state.session.stage = 'study';
-      state.studyQueue = buildStudyQueue();
-      state.studyIndex = 0;
-      sessionReviewed = new Set();
-      state.tab = 'study';
-      render();
-    } else if (reviewItems.length > 0) {
-      state.session.stage = 'review';
-      state.tab = 'practice';
-      startQuiz(reviewItems, 'mixed', 'today-review');
-      render();
-    }
-    return;
-  }
-
-  if (newCards().length > 0) {
-    showConfirm('Хотите изучить ещё кандзи?', () => {
-      state.session = { stage: 'study', newStudied: [] };
-      state.studyQueue = newCards().slice(0, state.settings.newPerDay);
+  // Повторное нажатие в тот же день
+  if (todayNew > 0) {
+    showConfirm('Вы уже сегодня изучили новые кандзи. Хотите ещё?', () => {
+      const extraBatch = shuffle(newCards()).slice(0, state.settings.newPerDay);
+      if (extraBatch.length === 0) {
+        toast('Все кандзи изучены! 🎉');
+        return;
+      }
+      state.session = { stage: 'study', newStudied: [], newBatch: extraBatch };
+      state.studyQueue = extraBatch;
       state.studyIndex = 0;
       sessionReviewed = new Set();
       state.tab = 'study';
       render();
     });
+    return;
+  }
+
+  // Первый заход в день
+  const studied = studiedCards();
+  const due = dueCards();
+
+  const dueSet = new Set(due.map(d => d.kanji));
+  const reviewPool = [...due, ...studied.filter(d => !dueSet.has(d.kanji))];
+  const reviewItems = shuffle(reviewPool).slice(0, 10);
+
+  const newBatch = shuffle(newCards()).slice(0, state.settings.newPerDay);
+
+  if (reviewItems.length > 0) {
+    state.session = { stage: 'review', newStudied: [], newBatch };
+    state.tab = 'practice';
+    startQuiz(reviewItems, 'mixed', 'today-review');
+    render();
+  } else if (newBatch.length > 0) {
+    state.session = { stage: 'study', newStudied: [], newBatch };
+    state.studyQueue = newBatch;
+    state.studyIndex = 0;
+    sessionReviewed = new Set();
+    state.tab = 'study';
+    render();
   } else {
     toast('Все кандзи изучены! 🎉');
   }
@@ -794,7 +812,6 @@ function renderStudy() {
   }
 
   if (state.studyIndex >= state.studyQueue.length) {
-    const today = new Date().toISOString().slice(0, 10);
     const inSession = state.session && state.session.stage === 'study';
 
     if (inSession) {
@@ -1086,16 +1103,16 @@ function quizAnswer(i) {
 }
 
 function continueAfterReview() {
-  const newAvail = newCards().slice(0, state.settings.newPerDay);
-  if (newAvail.length === 0) {
-    toast('Новых кандзи на сегодня нет');
+  const newBatch = (state.session && state.session.newBatch) || [];
+  if (newBatch.length === 0) {
+    toast('Все кандзи изучены! 🎉');
     state.session = null;
     state.tab = 'home';
     render();
     return;
   }
   state.session.stage = 'study';
-  state.studyQueue = buildStudyQueue();
+  state.studyQueue = newBatch;
   state.studyIndex = 0;
   sessionReviewed = new Set();
   state.tab = 'study';
@@ -1130,7 +1147,7 @@ function renderBrowse() {
     </div>
     <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:14px;">
       Показано: ${Math.min(filtered.length, 500)} из ${filtered.length}
-      ${pool.length !== TOTAL ? ` · ${state.levelFilter}` : ''}
+      ${pool.length !== TOTAL ? ` · ${state.levelFilter === 'bkb' ? 'BKB' : state.levelFilter}` : ''}
     </div>`;
   const input = document.getElementById('searchInput');
   input.addEventListener('input', e => {
