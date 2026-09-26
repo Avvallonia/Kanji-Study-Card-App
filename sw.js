@@ -4,14 +4,13 @@
    - Всё остальное: cache-first + фоновая догрузка
 */
 
-const CACHE = 'kanji-study-v5';
+const CACHE = 'kanji-study-v6';
 
 const PRECACHE = [
   './',
   './index.html',
   './kanji_data.js',
   './bkb_data.js',
-  './kanji_ru.js',
   './warodai_mini.js',
   './manifest.webmanifest',
   './icon.svg',
