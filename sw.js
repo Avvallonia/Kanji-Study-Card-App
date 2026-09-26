@@ -11,6 +11,7 @@ const PRECACHE = [
   './index.html',
   './kanji_data.js',
   './bkb_data.js',
+  './kanji_ru.js',
   './warodai_mini.js',
   './manifest.webmanifest',
   './icon.svg',
