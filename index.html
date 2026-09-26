@@ -468,6 +468,10 @@ const LEVEL_COUNTS = LEVELS.reduce((acc, lv) => {
   return acc;
 }, {});
 const TOTAL = DATA.length;
+// Кандзи, которые есть в Basic Kanji Book
+const BKB_COUNT = (typeof BKB !== 'undefined')
+  ? DATA.filter(d => BKB[d.kanji]).length
+  : 0;
 
 /* ====================== СОСТОЯНИЕ ====================== */
 const STORAGE_KEY = 'kanji-study-v3';
@@ -561,7 +565,12 @@ function review(k, quality, wasCorrect) {
 
 /* ====================== ФИЛЬТРЫ ====================== */
 function byLevel(arr) {
-  return state.levelFilter === 'all' ? arr : arr.filter(d => d.level === state.levelFilter);
+  if (state.levelFilter === 'all') return arr;
+  if (state.levelFilter === 'bkb') {
+    if (typeof BKB === 'undefined') return [];
+    return arr.filter(d => BKB[d.kanji]);
+  }
+  return arr.filter(d => d.level === state.levelFilter);
 }
 function dueCards(pool) {
   const now = Date.now();
@@ -592,8 +601,13 @@ const drawer = document.getElementById('drawer');
 const drawerOverlay = document.getElementById('drawerOverlay');
 
 function renderLevelBar() {
-  const items = [{ id: 'all', label: 'Все уровни', n: TOTAL }]
-    .concat(LEVELS.map(lv => ({ id: lv, label: lv, n: LEVEL_COUNTS[lv] })));
+  const items = [{ id: 'all', label: 'Все уровни', n: TOTAL }];
+  if (BKB_COUNT > 0) {
+    items.push({ id: 'bkb', label: '📖 По книге BKB', n: BKB_COUNT });
+  }
+  items.push(
+    ...LEVELS.map(lv => ({ id: lv, label: lv, n: LEVEL_COUNTS[lv] }))
+  );
   levelList.innerHTML = items.map(it => `
     <button class="${state.levelFilter === it.id ? 'active' : ''}" onclick="setLevel('${it.id}')">
       <span>${it.label}</span>
@@ -1209,7 +1223,9 @@ function renderStats() {
   const streak = calcStreak();
   const totalReviews = Object.values(state.history).reduce((a, b) => a + b, 0);
   const studiedPct = pool.length ? ((pool.length - n) / pool.length * 100).toFixed(0) : 0;
-  const levelLabel = state.levelFilter === 'all' ? 'Все уровни' : state.levelFilter;
+  const levelLabel = state.levelFilter === 'all' ? 'Все уровни'
+    : state.levelFilter === 'bkb' ? 'По книге BKB'
+    : state.levelFilter;
 
   const studiedCardsInPool = pool.filter(d => getCard(d.kanji).status !== 'new');
   const avgMastery = studiedCardsInPool.length
