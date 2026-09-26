@@ -41,7 +41,7 @@ header {
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   padding: calc(env(safe-area-inset-top) + 10px) 16px 10px;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; gap: 8px;
 }
 header h1 { font-size: 17px; margin: 0; font-weight: 600; letter-spacing: 0.3px; }
 #menuBtn {
@@ -86,7 +86,6 @@ nav button.active { color: var(--accent); }
   text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500;
 }
 .row .val { word-break: break-word; min-width: 0; flex: 1; }
-
 .examples { margin-top: 14px; border-top: 1px dashed var(--border); padding-top: 14px; }
 .examples .ex {
   padding: 8px 0; font-size: 15px; line-height: 1.6;
@@ -96,13 +95,8 @@ nav button.active { color: var(--accent); }
   font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
   font-size: 17px; color: var(--text);
 }
-.examples .ex .r {
-  color: var(--muted); font-size: 14px;
-}
-.examples .ex .m {
-  color: var(--text); font-size: 15px;
-}
-
+.examples .ex .r { color: var(--muted); font-size: 14px; }
+.examples .ex .m { color: var(--text); font-size: 15px; }
 .flashcard .back .meanings,
 .row .val,
 .examples .ex .m {
@@ -110,7 +104,6 @@ nav button.active { color: var(--accent); }
   letter-spacing: 0.2px; line-height: 1.55; color: var(--text);
   word-wrap: break-word; overflow-wrap: anywhere;
 }
-
 .btn {
   display: flex; align-items: center; justify-content: center;
   padding: 14px 12px; border-radius: 12px; border: 1px solid var(--border);
@@ -124,8 +117,6 @@ nav button.active { color: var(--accent); }
 .btn-row-2 .btn[disabled] { opacity: 0.4; cursor: default; }
 .bar { height: 6px; background: var(--card2); border-radius: 999px; overflow: hidden; margin-top: 8px; }
 .bar .fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.3s; }
-
-/* Quiz */
 .quiz-q { text-align: center; padding: 24px 12px; }
 .quiz-q .big {
   font-size: 84px; line-height: 1;
@@ -153,8 +144,6 @@ nav button.active { color: var(--accent); }
 .opt.correct { background: rgba(74,222,128,0.15); border-color: var(--good); color: var(--good); }
 .opt.wrong { background: rgba(248,113,113,0.15); border-color: var(--bad); color: var(--bad); }
 .opt:disabled { cursor: default; opacity: 0.85; }
-
-/* Browse */
 .search {
   width: 100%; padding: 12px 14px; border-radius: 12px;
   border: 1px solid var(--border); background: var(--card);
@@ -172,8 +161,6 @@ nav button.active { color: var(--accent); }
 .kitem[data-status="learning"] .dot { background: var(--warn); }
 .kitem[data-status="review"] .dot { background: var(--good); }
 .kitem[data-status="new"] .dot { background: var(--accent); }
-
-/* Stats */
 .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
 .stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
 .stat .n { font-size: 26px; font-weight: 700; }
@@ -181,8 +168,6 @@ nav button.active { color: var(--accent); }
 h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin: 20px 0 10px; }
 .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 14px; }
 .empty .big { font-size: 48px; margin-bottom: 8px; opacity: 0.4; }
-
-/* Home */
 .home-hero {
   background: linear-gradient(135deg, #1a1f2e 0%, #151824 100%);
   border: 1px solid var(--border);
@@ -205,15 +190,9 @@ h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: upp
   background: transparent;
   border: 1.5px solid var(--border);
 }
-.cal-cell[data-lvl="1"],
-.cal-cell[data-lvl="2"],
-.cal-cell[data-lvl="3"],
-.cal-cell[data-lvl="4"] {
-  background: var(--bad);
-  border-color: var(--bad);
-}
+.cal-cell[data-lvl="1"] { background: var(--bad); border-color: var(--bad); }
 .cal-legend { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin-top: 10px; font-size: 10px; color: var(--muted); }
-.cal-legend .sw { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--border); }
+.cal-legend .sw { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--border); display: inline-block; }
 .cal-legend .sw.fill { background: var(--bad); border-color: var(--bad); }
 .level-prog { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
 .level-prog .name { font-weight: 500; }
@@ -231,8 +210,6 @@ h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: upp
 }
 .big-cta:active { transform: scale(0.985); }
 .big-cta .sub { font-size: 12px; font-weight: 500; opacity: 0.75; margin-top: 6px; }
-
-/* Drawer */
 #drawerOverlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
   opacity: 0; pointer-events: none; transition: opacity 0.2s;
@@ -286,8 +263,6 @@ h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: upp
   border-radius: 999px;
 }
 #levelList button.active .n { background: var(--accent); color: #0b1020; }
-
-/* Confirm modal */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 300;
   background: rgba(0,0,0,0.6);
@@ -309,7 +284,6 @@ h2 { font-size: 15px; color: var(--muted); font-weight: 600; text-transform: upp
   margin-bottom: 20px; line-height: 1.4;
 }
 .modal-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
 .toast {
   position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 80px);
   transform: translateX(-50%) translateY(20px);
@@ -368,6 +342,7 @@ canvas { width: 100%; height: 100%; background: #f7f7f7; border-radius: 12px; to
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- Данные -->
 <script src="kanji_data.js"></script>
 <script src="bkb_data.js"></script>
 <script src="kanji_ru.js"></script>
@@ -379,63 +354,51 @@ function capFirst(s) {
   if (!s) return s;
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
+
 function cleanMeaning(s) {
   if (!s) return '';
   let t = String(s);
-
-  // Годы и века: 1570.IV, 1573.VII, 1570.IV — 1573.VII
   t = t.replace(/\b\d{3,4}\s*\.\s*[IVX]+(\s*[—–-]\s*\d{3,4}\s*\.\s*[IVX]+)?/g, ' ');
-
-  // Мусор: "10000 てぃちょう" — большое число + кана
   t = t.replace(/\b\d{4,}\s*[ぁ-ゟァ-ヿ]+/g, ' ');
-
-  // Нумерация "1) ", "12) "
   t = t.replace(/(^|\s)\d+\)\s*/g, '$1');
-
-  // Множественные пробелы
   t = t.replace(/\s+/g, ' ').trim();
-
-  // Длинные описания в скобках (больше 50 символов) — убираем,
-  // но НЕ трогаем {～の}, 【...】 и короткие (кн.), (суф.)
   t = t.replace(/\(([^)]{50,})\)/g, '');
-
-  // Убираем висячие пустые скобки
   t = t.replace(/\s*\(\s*\)/g, ' ');
-
-  // Хвостовая/ведущая пунктуация (кроме закрывающих скобок и точек внутри пометок)
   t = t.replace(/^[\s.,;:\[\]—-]+|[\s.,;:\[\]—-]+$/g, '');
-
   t = t.replace(/\s+/g, ' ').trim();
-
-  // Обрезаем слишком длинное
   if (t.length > 120) t = t.slice(0, 117).trim() + '…';
-
   return capFirst(t);
 }
 
-// Проверяем, что значение похоже на осмысленный текст
 function isMeaningValid(s) {
   if (!s || s.length < 2) return false;
-  // Должна быть хотя бы одна кириллическая/латинская буква
   if (!/[а-яёa-z]/i.test(s)) return false;
-  // Если строка начинается с цифр и содержит кана — это мусор
   if (/^\d+\s*[ぁ-ゟァ-ヿ]/.test(s)) return false;
   return true;
 }
 
-/* ====================== ПАРСИНГ ====================== */
+/* ====================== ПАРСИНГ ======================
+   Формат kanji_data.js: kanji|level|значения|онные|кунные|примеры
+   BKB: кандзи → { m, ex }
+   KANJI_RU: кандзи → строка
+   WARODAI: "слово:чтение" → перевод
+====================================================== */
 function parseData(raw) {
   return raw.split('\n').map(line => {
     const parts = line.split('|');
     if (parts.length < 4) return null;
     const [k, level, meaningsRaw, on, kun, ex] = parts;
+    const kanjiKey = k.trim();
 
-        // ПРИОРИТЕТ 1: примеры из BKB (Basic Kanji Book)
+    // ---------- ПРИМЕРЫ ----------
     let examples = [];
-    if (typeof BKB !== 'undefined' && BKB[k.trim()] && BKB[k.trim()].ex) {
-      examples = BKB[k.trim()].ex.map(s => ({ raw: s }));
+
+    // ПРИОРИТЕТ 1: BKB — raw-строки в книжном формате
+    if (typeof BKB !== 'undefined' && BKB[kanjiKey] && BKB[kanjiKey].ex && BKB[kanjiKey].ex.length) {
+      examples = BKB[kanjiKey].ex.map(s => ({ raw: s }));
     }
-    // ПРИОРИТЕТ 2: сборка из kanji_data + Warodai (как раньше)
+
+    // ПРИОРИТЕТ 2: kanji_data + WARODAI
     if (examples.length === 0) {
       examples = (ex || '').split(';').map(s => {
         const seg = s.split(':');
@@ -447,32 +410,28 @@ function parseData(raw) {
           m = WARODAI[`${w}:${r}`] || WARODAI[`${w}:`] || '';
         }
         if (!m) m = seg.slice(2).join(':').trim();
-        return w ? { word: w, reading: r, meaning: cleanMeaning(m) } : null;
+        m = cleanMeaning(m);
+        if (!isMeaningValid(m)) m = '—';
+        return w ? { word: w, reading: r, meaning: m } : null;
       }).filter(Boolean);
     }
 
-       const kanjiKey = k.trim();
+    // ---------- ЗНАЧЕНИЕ КАНДЗИ ----------
     let kanjiMeanings = null;
 
-    // ПРИОРИТЕТ 1: BKB — значение из Basic Kanji Book
+    // ПРИОРИТЕТ 1: BKB
     if (typeof BKB !== 'undefined' && BKB[kanjiKey] && BKB[kanjiKey].m) {
       const cleaned = cleanMeaning(BKB[kanjiKey].m);
       if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
     }
 
-    // ПРИОРИТЕТ 2: KANJI_RU — русский перевод из KanjiStudy_jpn-rus
+    // ПРИОРИТЕТ 2: KANJI_RU
     if (!kanjiMeanings && typeof KANJI_RU !== 'undefined' && KANJI_RU[kanjiKey]) {
       const cleaned = cleanMeaning(KANJI_RU[kanjiKey]);
       if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
     }
 
-    // ПРИОРИТЕТ 2: WARODAI — если кандзи сам по себе является словом
-    if (!kanjiMeanings && typeof WARODAI !== 'undefined' && WARODAI[`${kanjiKey}:`]) {
-      const cleaned = cleanMeaning(WARODAI[`${kanjiKey}:`]);
-      if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
-    }
-
-    // ПРИОРИТЕТ 3: значения из kanji_data.js (англ./смешанные)
+    // ПРИОРИТЕТ 3: значения из kanji_data
     if (!kanjiMeanings) {
       kanjiMeanings = meaningsRaw.split(/[,;]/)
         .map(s => cleanMeaning(s.trim()))
@@ -520,8 +479,8 @@ const state = {
   studyIndex: 0,
   session: null,
   quiz: null,
-  history: {},       // все события по дням
-  historyNew: {}     // только новые изученные
+  history: {},
+  historyNew: {}
 };
 
 function load() {
@@ -578,10 +537,8 @@ function review(k, quality, wasCorrect) {
   const now = Date.now();
   c.reps++;
   c.lastReview = now;
-
   if (wasCorrect === true) c.correct = (c.correct || 0) + 1;
   else if (wasCorrect === false) c.wrong = (c.wrong || 0) + 1;
-
   if (quality === 0) {
     c.lapses++;
     c.ease = Math.max(1.3, c.ease - 0.2);
@@ -596,7 +553,6 @@ function review(k, quality, wasCorrect) {
     c.due = now + c.interval * DAY;
   }
   state.progress[k] = c;
-
   const today = new Date().toISOString().slice(0, 10);
   state.history[today] = (state.history[today] || 0) + 1;
   save();
@@ -709,7 +665,6 @@ function renderHome() {
     cells.push(`<div class="cal-cell" data-lvl="${filled}" ${isToday ? 'style="box-shadow:0 0 0 2px var(--warn)"' : ''}></div>`);
   }
 
-  // Прогресс по уровням
   const levelProg = LEVELS.map(lv => {
     const inLv = DATA.filter(d => d.level === lv);
     const done = inLv.filter(d => getCard(d.kanji).status !== 'new').length;
@@ -728,7 +683,6 @@ function renderHome() {
   const dueAvail = dueCards().length;
   const remainingNew = newCards().length;
 
-  // Подпись кнопки — только про новые
   let ctaSubtitle;
   if (newAvail > 0) ctaSubtitle = `${newAvail} новых`;
   else if (remainingNew > 0) ctaSubtitle = 'Все на сегодня изучены';
@@ -770,7 +724,6 @@ function startToday() {
   const newAvail = Math.min(newCards().length, state.settings.newPerDay);
   const due = dueCards().slice(0, 10);
 
-  // Если есть что делать — запускаем обычный флоу
   if (due.length > 0 || newAvail > 0) {
     let reviewItems = [];
     if (due.length > 0) {
@@ -781,11 +734,7 @@ function startToday() {
       reviewItems = shuffle(studied);
     }
 
-    state.session = {
-      stage: null,
-      newStudied: [],
-      newAvailCount: newAvail
-    };
+    state.session = { stage: null, newStudied: [], newAvailCount: newAvail };
 
     if (due.length > 0 && reviewItems.length > 0) {
       state.session.stage = 'review';
@@ -808,7 +757,6 @@ function startToday() {
     return;
   }
 
-  // Всё сделано — предлагаем изучить ещё
   if (newCards().length > 0) {
     showConfirm('Хотите изучить ещё кандзи?', () => {
       state.session = { stage: 'study', newStudied: [] };
@@ -1192,13 +1140,12 @@ function openDetail(k) {
         <div class="meanings">${d.meanings.join(', ')}</div>
         ${d.on.length ? `<div class="row"><span class="label">On</span><span class="val">${d.on.join('、')}</span></div>` : ''}
         ${d.kun.length ? `<div class="row"><span class="label">Kun</span><span class="val">${d.kun.join('、')}</span></div>` : ''}
-        ${d.examples.length ? `
-          <div class="examples">
-            ${d.examples.map(e => e.raw
-              ? `<div class="ex">${e.raw}</div>`
-              : `<div class="ex"><span class="w">${e.word}</span><span class="r">(${e.reading})</span> <span class="m">${e.meaning}</span></div>`
-            ).join('')}
-          </div>` : ''}
+        ${d.examples.length ? `<div class="examples">
+          ${d.examples.map(e => e.raw
+            ? `<div class="ex">${e.raw}</div>`
+            : `<div class="ex"><span class="w">${e.word}</span><span class="r">(${e.reading})</span> <span class="m">${e.meaning}</span></div>`
+          ).join('')}
+        </div>` : ''}
       </div>
       <div class="bar" style="width:100%; margin-top:14px;"><div class="fill" style="width:${mastery}%"></div></div>
     </div>
