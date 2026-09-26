@@ -3293,4 +3293,4 @@ const BKB = {
     "課(か) section",
     "課題(か・だい) a subject",
     "第一課(だい・いっ・か) Lesson 1"
-  ]}
+  ]};
