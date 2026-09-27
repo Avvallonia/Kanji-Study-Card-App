@@ -926,17 +926,42 @@ function renderPractice() {
     meaning2kanji: 'Выбери кандзи'
   }[q.currentMode];
 
+  // Какую подсказку показать при тапе
+  // - kanji2meaning → чтения (On/Kun)
+  // - kanji2reading → значения
+  // - meaning2kanji → чтения (On/Kun)
+  let hintHtml = '';
+  if (q.hintShown) {
+    if (q.currentMode === 'kanji2reading') {
+      hintHtml = `
+        <div class="readings-hint">
+          <div>Значение: <b>${item.meanings.join(', ')}</b></div>
+        </div>`;
+    } else {
+      hintHtml = `
+        <div class="readings-hint">
+          ${item.on.length ? `<div>On: <b>${item.on.join('、')}</b></div>` : ''}
+          ${item.kun.length ? `<div style="margin-top:4px;">Kun: <b>${item.kun.join('、')}</b></div>` : ''}
+          ${!item.on.length && !item.kun.length ? '<div style="color:var(--muted);">Нет чтений</div>' : ''}
+        </div>`;
+    }
+  }
+
+  // Подпись подсказки под элементом
+  const hintTip = {
+    kanji2meaning: 'Нажми на кандзи, чтобы увидеть чтения',
+    kanji2reading: 'Нажми на кандзи, чтобы увидеть значение',
+    meaning2kanji: 'Нажми на значение, чтобы увидеть чтения'
+  }[q.currentMode];
+
+  // ---------- kanji2meaning / kanji2reading (в центре — кандзи) ----------
   if (q.currentMode === 'kanji2meaning' || q.currentMode === 'kanji2reading') {
     view.innerHTML = `
       <div class="card quiz-q">
         <div class="prompt">${modeLabel}</div>
         <div class="big" onclick="toggleHint()">${item.kanji}</div>
-        <div class="hint-tip">Нажми на кандзи, чтобы увидеть подсказку</div>
-        ${q.hintShown ? `
-          <div class="readings-hint">
-            ${item.on.length ? `<div>On: <b>${item.on.join('、')}</b></div>` : ''}
-            ${item.kun.length ? `<div style="margin-top:4px;">Kun: <b>${item.kun.join('、')}</b></div>` : ''}
-          </div>` : ''}
+        <div class="hint-tip">${hintTip}</div>
+        ${hintHtml}
       </div>
       <div class="opts">
         ${q.options.map((opt, i) => `<button class="opt" ${q.answered ? 'disabled' : ''} data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
@@ -946,10 +971,17 @@ function renderPractice() {
     return;
   }
 
+  // ---------- meaning2kanji (в центре — значение) ----------
   view.innerHTML = `
     <div class="card quiz-q">
       <div class="prompt">${modeLabel}</div>
-      <div style="font-size:22px; font-weight:600; margin:14px 0; word-wrap:break-word;">${item.meanings.join(', ')}</div>
+      <div onclick="toggleHint()" style="
+        font-size: 22px; font-weight: 600; margin: 14px 0;
+        word-wrap: break-word; cursor: pointer; user-select: none;
+        transition: transform 0.1s;
+      ">${item.meanings.join(', ')}</div>
+      <div class="hint-tip">${hintTip}</div>
+      ${hintHtml}
     </div>
     <div class="opts">
       ${q.options.map((opt, i) => `<button class="opt" ${q.answered ? 'disabled' : ''} style="font-size:28px; text-align:center; font-family:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;" data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
