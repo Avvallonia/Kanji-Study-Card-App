@@ -4,7 +4,7 @@
    - Всё остальное: cache-first + фоновая догрузка
 */
 
-const CACHE = 'kanji-study-v6';
+const CACHE = 'kanji-study-v7';
 
 const PRECACHE = [
   './',
