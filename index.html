@@ -391,54 +391,50 @@ function parseData(raw) {
     const [k, level, meaningsRaw, on, kun, ex] = parts;
     const kanjiKey = k.trim();
 
-    // ---------- ПРИМЕРЫ ----------
-    let examples = [];
-
-    // ПРИОРИТЕТ 1: BKB — raw-строки в книжном формате
-    if (typeof BKB !== 'undefined' && BKB[kanjiKey] && BKB[kanjiKey].ex && BKB[kanjiKey].ex.length) {
-      examples = BKB[kanjiKey].ex.map(s => ({ raw: s }));
+    // ---------- Если кандзи есть в BKB — берём ТОЛЬКО из BKB ----------
+    const inBKB = (typeof BKB !== 'undefined' && BKB[kanjiKey]);
+    if (inBKB) {
+      const bkb = BKB[kanjiKey];
+      const bkbMeanings = bkb.m
+        ? [cleanMeaning(bkb.m)].filter(isMeaningValid)
+        : [];
+      return {
+        kanji: kanjiKey,
+        level: (level || 'N5').trim(),
+        meanings: bkbMeanings.length ? bkbMeanings : ['—'],
+        on: on.split(',').map(s => s.trim()).filter(Boolean),
+        kun: kun.split(',').map(s => s.trim().replace(/\./g, '')).filter(Boolean),
+        examples: (bkb.ex || []).map(s => ({ raw: s })),
+        fromBKB: true
+      };
     }
 
-    // ПРИОРИТЕТ 2: kanji_data + WARODAI — приводим к книжному виду
-    if (examples.length === 0) {
-      examples = (ex || '').split(';').map(s => {
-        const seg = s.split(':');
-        if (seg.length < 2) return null;
-        const w = seg[0].trim();
-        const r = (seg[1] || '').trim();
-        let m = '';
-        if (typeof WARODAI !== 'undefined') {
-          m = WARODAI[`${w}:${r}`] || WARODAI[`${w}:`] || '';
-        }
-        if (!m) m = seg.slice(2).join(':').trim();
-        m = cleanMeaning(m);
-        if (!isMeaningValid(m)) m = '—';
-        return w ? { raw: `${w}(${r}) ${m}` } : null;
-      }).filter(Boolean);
-    }
+    // ---------- Остальные кандзи — старая логика ----------
+    let examples = (ex || '').split(';').map(s => {
+      const seg = s.split(':');
+      if (seg.length < 2) return null;
+      const w = seg[0].trim();
+      const r = (seg[1] || '').trim();
+      let m = '';
+      if (typeof WARODAI !== 'undefined') {
+        m = WARODAI[`${w}:${r}`] || WARODAI[`${w}:`] || '';
+      }
+      if (!m) m = seg.slice(2).join(':').trim();
+      m = cleanMeaning(m);
+      if (!isMeaningValid(m)) m = '—';
+      return w ? { raw: `${w}(${r}) ${m}` } : null;
+    }).filter(Boolean);
 
-    // ---------- ЗНАЧЕНИЕ КАНДЗИ ----------
     let kanjiMeanings = null;
-
-    // ПРИОРИТЕТ 1: BKB
-    if (typeof BKB !== 'undefined' && BKB[kanjiKey] && BKB[kanjiKey].m) {
-      const cleaned = cleanMeaning(BKB[kanjiKey].m);
-      if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
-    }
-
-    // ПРИОРИТЕТ 2: KANJI_RU (переводы из Google)
-    if (!kanjiMeanings && typeof KANJI_RU !== 'undefined' && KANJI_RU[kanjiKey]) {
+    if (typeof KANJI_RU !== 'undefined' && KANJI_RU[kanjiKey]) {
       const cleaned = cleanMeaning(KANJI_RU[kanjiKey]);
       if (isMeaningValid(cleaned)) kanjiMeanings = [cleaned];
     }
-
-    // ПРИОРИТЕТ 3: значения из kanji_data
     if (!kanjiMeanings) {
       kanjiMeanings = meaningsRaw.split(/[,;]/)
         .map(s => cleanMeaning(s.trim()))
         .filter(s => s && isMeaningValid(s));
     }
-
     if (!kanjiMeanings || kanjiMeanings.length === 0) {
       kanjiMeanings = [cleanMeaning(meaningsRaw) || '—'];
     }
@@ -666,7 +662,6 @@ function renderHome() {
   const todayNew = state.historyNew[today] || 0;
   const todayReviews = Math.max(0, todayTotal - todayNew);
 
-  // Календарь на 35 дней
   const cells = [];
   const now = new Date();
   for (let i = 34; i >= 0; i--) {
@@ -679,7 +674,6 @@ function renderHome() {
     cells.push(`<div class="cal-cell" data-lvl="${filled}" ${isToday ? 'style="box-shadow:0 0 0 2px var(--warn)"' : ''}></div>`);
   }
 
-  // Полоса прогресса BKB
   let bkbProg = '';
   if (typeof BKB !== 'undefined' && BKB_COUNT > 0) {
     const bkbCards = DATA.filter(d => BKB[d.kanji]);
@@ -695,7 +689,6 @@ function renderHome() {
       </div>`;
   }
 
-  // Прогресс по уровням JLPT
   const levelProg = bkbProg + LEVELS.map(lv => {
     const inLv = DATA.filter(d => d.level === lv);
     const done = inLv.filter(d => getCard(d.kanji).status !== 'new').length;
@@ -710,7 +703,6 @@ function renderHome() {
       </div>`;
   }).join('');
 
-  // Кнопка
   let ctaSubtitle;
   let ctaDim = false;
   if (todayNew > 0) {
@@ -759,7 +751,6 @@ function startToday() {
   const today = new Date().toISOString().slice(0, 10);
   const todayNew = state.historyNew[today] || 0;
 
-  // Повторное нажатие в тот же день
   if (todayNew > 0) {
     showConfirm('Вы уже сегодня изучили новые кандзи. Хотите ещё?', () => {
       const extraBatch = shuffle(newCards()).slice(0, state.settings.newPerDay);
@@ -777,7 +768,6 @@ function startToday() {
     return;
   }
 
-  // Первый заход в день
   const studied = studiedCards();
   const due = dueCards();
 
@@ -897,6 +887,28 @@ function prevCard() {
 }
 
 /* ====================== PRACTICE ====================== */
+function renderFullCard(item) {
+  const c = getCard(item.kanji);
+  const mastery = getMastery(c);
+  return `
+    <div class="flashcard" style="min-height:auto; padding:16px 8px;">
+      <div class="kanji" style="font-size:72px; margin-bottom:4px;">${item.kanji}</div>
+      <div class="hint">${item.level} · ${mastery}%</div>
+      <div class="back">
+        <div class="meanings">${item.meanings.join(', ')}</div>
+        ${item.on.length ? `<div class="row"><span class="label">On</span><span class="val">${item.on.join('、')}</span></div>` : ''}
+        ${item.kun.length ? `<div class="row"><span class="label">Kun</span><span class="val">${item.kun.join('、')}</span></div>` : ''}
+        ${item.examples.length ? `
+          <div class="examples">
+            ${item.examples.map(e => e.raw
+              ? `<div class="ex">${e.raw}</div>`
+              : `<div class="ex"><span class="w">${e.word}</span><span class="r">(${e.reading})</span> <span class="m">${e.meaning}</span></div>`
+            ).join('')}
+          </div>` : ''}
+      </div>
+    </div>`;
+}
+
 function renderPractice() {
   if (!state.quiz) {
     const pool = studiedCards();
@@ -926,36 +938,48 @@ function renderPractice() {
     meaning2kanji: 'Выбери кандзи'
   }[q.currentMode];
 
-  // Какую подсказку показать при тапе
-  // - kanji2meaning → чтения (On/Kun)
-  // - kanji2reading → значения
-  // - meaning2kanji → чтения (On/Kun)
-  let hintHtml = '';
-  if (q.hintShown) {
-    if (q.currentMode === 'kanji2reading') {
-      hintHtml = `
-        <div class="readings-hint">
-          <div>Значение: <b>${item.meanings.join(', ')}</b></div>
-        </div>`;
-    } else {
-      hintHtml = `
-        <div class="readings-hint">
-          ${item.on.length ? `<div>On: <b>${item.on.join('、')}</b></div>` : ''}
-          ${item.kun.length ? `<div style="margin-top:4px;">Kun: <b>${item.kun.join('、')}</b></div>` : ''}
-          ${!item.on.length && !item.kun.length ? '<div style="color:var(--muted);">Нет чтений</div>' : ''}
-        </div>`;
-    }
+  // ---------- ПОСЛЕ ОТВЕТА — полная карточка ----------
+  if (q.answered) {
+    view.innerHTML = `
+      <div class="card">
+        ${renderFullCard(item)}
+      </div>
+      <div class="opts">
+        ${q.options.map((opt, i) => {
+          let cls = 'opt';
+          if (opt === q.correctText) cls += ' correct';
+          else if (i === q.selectedIndex) cls += ' wrong';
+          const isKanji = q.currentMode === 'meaning2kanji';
+          const style = isKanji ? "style=\"font-size:28px; text-align:center; font-family:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;\"" : '';
+          return `<button class="${cls}" disabled ${style}>${opt}</button>`;
+        }).join('')}
+      </div>
+      <button class="btn btn-primary" style="width:100%; margin-top:14px;" onclick="nextQuiz()">Дальше →</button>
+      <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:12px;">${q.done} / ${q.total} · Правильно: ${q.correct}</div>`;
+    return;
   }
 
-  // Подпись подсказки под элементом
-  const hintTip = {
-    kanji2meaning: 'Нажми на кандзи, чтобы увидеть чтения',
-    kanji2reading: 'Нажми на кандзи, чтобы увидеть значение',
-    meaning2kanji: 'Нажми на значение, чтобы увидеть чтения'
-  }[q.currentMode];
+  // ---------- ДО ОТВЕТА — вопрос с подсказкой ----------
 
-  // ---------- kanji2meaning / kanji2reading (в центре — кандзи) ----------
+  // kanji2meaning / kanji2reading
   if (q.currentMode === 'kanji2meaning' || q.currentMode === 'kanji2reading') {
+    let hintHtml = '';
+    if (q.hintShown) {
+      if (q.currentMode === 'kanji2reading') {
+        hintHtml = `<div class="readings-hint"><div>Значение: <b>${item.meanings.join(', ')}</b></div></div>`;
+      } else {
+        hintHtml = `
+          <div class="readings-hint">
+            ${item.on.length ? `<div>On: <b>${item.on.join('、')}</b></div>` : ''}
+            ${item.kun.length ? `<div style="margin-top:4px;">Kun: <b>${item.kun.join('、')}</b></div>` : ''}
+            ${!item.on.length && !item.kun.length ? '<div style="color:var(--muted);">Нет чтений</div>' : ''}
+          </div>`;
+      }
+    }
+    const hintTip = q.currentMode === 'kanji2meaning'
+      ? 'Нажми на кандзи, чтобы увидеть чтения'
+      : 'Нажми на кандзи, чтобы увидеть значение';
+
     view.innerHTML = `
       <div class="card quiz-q">
         <div class="prompt">${modeLabel}</div>
@@ -964,29 +988,35 @@ function renderPractice() {
         ${hintHtml}
       </div>
       <div class="opts">
-        ${q.options.map((opt, i) => `<button class="opt" ${q.answered ? 'disabled' : ''} data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
+        ${q.options.map((opt, i) => `<button class="opt" data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
       </div>
-      ${q.answered ? `<button class="btn btn-primary" style="width:100%; margin-top:14px;" onclick="nextQuiz()">Дальше →</button>` : ''}
       <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:12px;">${q.done} / ${q.total} · Правильно: ${q.correct}</div>`;
     return;
   }
 
-  // ---------- meaning2kanji (в центре — значение) ----------
+  // meaning2kanji
+  let hintHtml = '';
+  if (q.hintShown) {
+    hintHtml = `
+      <div class="readings-hint">
+        ${item.on.length ? `<div>On: <b>${item.on.join('、')}</b></div>` : ''}
+        ${item.kun.length ? `<div style="margin-top:4px;">Kun: <b>${item.kun.join('、')}</b></div>` : ''}
+        ${!item.on.length && !item.kun.length ? '<div style="color:var(--muted);">Нет чтений</div>' : ''}
+      </div>`;
+  }
   view.innerHTML = `
     <div class="card quiz-q">
       <div class="prompt">${modeLabel}</div>
       <div onclick="toggleHint()" style="
         font-size: 22px; font-weight: 600; margin: 14px 0;
         word-wrap: break-word; cursor: pointer; user-select: none;
-        transition: transform 0.1s;
       ">${item.meanings.join(', ')}</div>
-      <div class="hint-tip">${hintTip}</div>
+      <div class="hint-tip">Нажми на значение, чтобы увидеть чтения</div>
       ${hintHtml}
     </div>
     <div class="opts">
-      ${q.options.map((opt, i) => `<button class="opt" ${q.answered ? 'disabled' : ''} style="font-size:28px; text-align:center; font-family:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;" data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
+      ${q.options.map((opt, i) => `<button class="opt" style="font-size:28px; text-align:center; font-family:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;" data-i="${i}" onclick="quizAnswer(${i})">${opt}</button>`).join('')}
     </div>
-    ${q.answered ? `<button class="btn btn-primary" style="width:100%; margin-top:14px;" onclick="nextQuiz()">Дальше →</button>` : ''}
     <div style="color:var(--muted); font-size:12px; text-align:center; margin-top:12px;">${q.done} / ${q.total} · Правильно: ${q.correct}</div>`;
 }
 
@@ -1007,7 +1037,9 @@ function startQuiz(items, mode, tag) {
     correct: 0,
     tag: tag || null,
     currentMode: null,
-    hintShown: false
+    hintShown: false,
+    selectedIndex: null,
+    answered: false
   };
   nextQuiz();
 }
@@ -1070,6 +1102,8 @@ function nextQuiz() {
   const item = q.questions[q.done];
   q.currentMode = (q.mode === 'mixed') ? pickModeFor(item) : q.mode;
   q.hintShown = false;
+  q.selectedIndex = null;
+  q.answered = false;
 
   let correct, key;
   if (q.currentMode === 'kanji2meaning') { correct = item.meanings[0]; key = d => d.meanings[0]; }
@@ -1094,7 +1128,6 @@ function nextQuiz() {
   q.item = item;
   q.correctText = correct;
   q.options = options;
-  q.answered = false;
   q.done++;
   render();
 }
@@ -1103,6 +1136,8 @@ function quizAnswer(i) {
   const q = state.quiz;
   if (q.answered) return;
   q.answered = true;
+  q.selectedIndex = i;
+
   const chosen = q.options[i];
   const isCorrect = chosen === q.correctText;
 
@@ -1118,20 +1153,7 @@ function quizAnswer(i) {
   }
 
   if (isCorrect) q.correct++;
-
-  document.querySelectorAll('.opt').forEach((el, j) => {
-    el.classList.remove('correct', 'wrong');
-    if (q.options[j] === q.correctText) el.classList.add('correct');
-    else if (j === i) el.classList.add('wrong');
-    el.disabled = true;
-  });
-
-  const btn = document.createElement('button');
-  btn.className = 'btn btn-primary';
-  btn.style = 'width:100%; margin-top:14px;';
-  btn.textContent = 'Дальше →';
-  btn.onclick = nextQuiz;
-  document.querySelector('.opts').after(btn);
+  renderPractice();
 }
 
 function continueAfterReview() {
