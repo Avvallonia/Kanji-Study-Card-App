@@ -417,11 +417,14 @@ function extractAllowedReadings(examples) {
 // Для кунных чтений сравниваем основу до дефиса (い-きる → い).
 function filterReadings(readings, allowed, isKun) {
   return readings.filter(r => {
+    // Оставляем точку/дефис для разделения
     const base = isKun ? r.split(/[-.]/)[0] : r;
     const n = normalizeReading(base);
     if (!n) return false;
+    
     for (const a of allowed) {
-      if (a.includes(n)) return true;
+      // Если одно является началом другого (например, "ま" и "まじる")
+      if (n === a || n.startsWith(a) || a.startsWith(n)) return true;
     }
     return false;
   });
@@ -451,8 +454,9 @@ function parseData(raw) {
         allowed,
         false
       );
+      
       let kunReadings = filterReadings(
-        kun.split(',').map(s => s.trim().replace(/\./g, '')).filter(Boolean),
+        kun.split(',').map(s => s.trim()).filter(Boolean), // <--- убрали replace
         allowed,
         true
       );
