@@ -382,6 +382,50 @@ function isMeaningValid(s) {
   if (/^\d+\s*[ぁ-ゟァ-ヿ]/.test(s)) return false;
   return true;
 }
+// Приводим чтение к сравнимому виду:
+// - убираем точки и дефисы (окуригана-маркеры)
+// - катакану → хирагану
+// - убираем пробелы и разделители ・ ／ /
+function normalizeReading(r) {
+  if (!r) return '';
+  return String(r)
+    .replace(/[.\-]/g, '')
+    .replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60))
+    .replace(/[\s・･／\/]/g, '')
+    .trim();
+}
+
+// Собираем все чтения из примеров BKB вида "日本(に・ほん／にっ・ぽん) Япония"
+function extractAllowedReadings(examples) {
+  const allowed = new Set();
+  for (const ex of examples || []) {
+    const m = String(ex).match(/\(([^)]+)\)/);
+    if (!m) continue;
+    for (const variant of m[1].split(/[／\/]/)) {
+      const cleaned = variant.replace(/[.\-]/g, '');
+      allowed.add(normalizeReading(cleaned));
+      for (const seg of variant.split(/[・･]/)) {
+        const s = seg.replace(/[.\-]/g, '');
+        if (s) allowed.add(normalizeReading(s));
+      }
+    }
+  }
+  return allowed;
+}
+
+// Оставляем только те чтения из kanji_data.js, которые встречаются в примерах BKB.
+// Для кунных чтений сравниваем основу до дефиса (い-きる → い).
+function filterReadings(readings, allowed, isKun) {
+  return readings.filter(r => {
+    const base = isKun ? r.split(/[-.]/)[0] : r;
+    const n = normalizeReading(base);
+    if (!n) return false;
+    for (const a of allowed) {
+      if (a.includes(n)) return true;
+    }
+    return false;
+  });
+}
 
 /* ====================== ПАРСИНГ ====================== */
 function parseData(raw) {
@@ -398,16 +442,34 @@ function parseData(raw) {
       const bkbMeanings = bkb.m
         ? [cleanMeaning(bkb.m)].filter(isMeaningValid)
         : [];
-      return {
-        kanji: kanjiKey,
-        level: (level || 'N5').trim(),
-        meanings: bkbMeanings.length ? bkbMeanings : ['—'],
-        on: on.split(',').map(s => s.trim()).filter(Boolean),
-        kun: kun.split(',').map(s => s.trim().replace(/\./g, '')).filter(Boolean),
-        examples: (bkb.ex || []).map(s => ({ raw: s })),
-        fromBKB: true
-      };
-    }
+    
+      const examples = (bkb.ex || []).map(s => ({ raw: s }));
+      const allowed = extractAllowedReadings(bkb.ex || []);
+    
+      let onReadings = filterReadings(
+        on.split(',').map(s => s.trim()).filter(Boolean),
+        allowed,
+        false
+      );
+      let kunReadings = filterReadings(
+        kun.split(',').map(s => s.trim().replace(/\./g, '')).filter(Boolean),
+        allowed,
+        true
+      );
+
+  if (onReadings.length === 0) onReadings = ['—'];
+  if (kunReadings.length === 0) kunReadings = ['—'];
+
+  return {
+    kanji: kanjiKey,
+    level: (level || 'N5').trim(),
+    meanings: bkbMeanings.length ? bkbMeanings : ['—'],
+    on: onReadings,
+    kun: kunReadings,
+    examples,
+    fromBKB: true
+  };
+}
 
     // ---------- Остальные кандзи — старая логика ----------
     let examples = (ex || '').split(';').map(s => {
@@ -1055,7 +1117,10 @@ function startPractice() {
 
 function pickModeFor(item) {
   const modes = ['kanji2meaning', 'kanji2reading', 'meaning2kanji'];
-  if (!item.kun.length) return modes[Math.floor(Math.random() * 2)];
+  const hasKun = item.kun.some(r => r && r !== '—');
+  const hasOn  = item.on.some(r => r && r !== '—');
+  if (!hasKun && !hasOn) return 'kanji2meaning';
+  if (!hasKun) return ['kanji2meaning', 'meaning2kanji'][Math.floor(Math.random() * 2)];
   return modes[Math.floor(Math.random() * 3)];
 }
 
@@ -1106,9 +1171,26 @@ function nextQuiz() {
   q.answered = false;
 
   let correct, key;
-  if (q.currentMode === 'kanji2meaning') { correct = item.meanings[0]; key = d => d.meanings[0]; }
-  else if (q.currentMode === 'kanji2reading') { correct = item.kun[0] || item.on[0]; key = d => d.kun[0] || d.on[0]; }
-  else { correct = item.kanji; key = d => d.kanji; }
+  if (q.currentMode === 'kanji2meaning') {
+    correct = item.meanings[0];
+    key = d => d.meanings[0];
+  } else if (q.currentMode === 'kanji2reading') {
+    const kunOk = (item.kun || []).filter(r => r && r !== '—');
+    const onOk  = (item.on  || []).filter(r => r && r !== '—');
+    correct = kunOk[0] || onOk[0];
+    if (!correct) {
+      q.currentMode = 'kanji2meaning';
+      correct = item.meanings[0];
+    }
+    key = d => {
+      const k = (d.kun || []).filter(r => r && r !== '—');
+      const o = (d.on  || []).filter(r => r && r !== '—');
+      return k[0] || o[0];
+    };
+  } else {
+    correct = item.kanji;
+    key = d => d.kanji;
+  }
 
   const others = shuffle(
     DATA.filter(d => d.kanji !== item.kanji && key(d) && key(d) !== correct)
